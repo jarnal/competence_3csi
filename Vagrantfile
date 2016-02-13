@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = "scotch/box"
   config.ssh.forward_agent = true
-  config.vm.network "private_network", ip: "192.168.50.10"
+  config.vm.network "private_network", ip: "192.168.100.10"
   config.vm.hostname = "scotchbox"
   config.vm.provision "shell", inline: $script
   config.vm.synced_folder ".", "/var/www/public", id: "application",  :nfs => true

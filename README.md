@@ -1,4 +1,7 @@
-cab_service_server
+Projet competence 3CSI
 ==================
 
-A Symfony project created on December 18, 2015, 9:54 am.
+Projet de fin d'année réalisé par :
+Camille Vasseur
+Thomas Sebbane
+Jonathan Arnal
