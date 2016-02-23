@@ -66,6 +66,16 @@ class User extends BaseUser
     private $api_key;
 
     /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->firstname = "";
+        $this->lastname = "";
+    }
+
+    /**
      * Get id
      *
      * @return int

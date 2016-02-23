@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+</head>
+<body>
+    <script>
+        var PlayerAPIUtils = (function(){
+
+            var SERVER_BASE_URL = "http://192.168.100.10/web/app_dev.php/api/";
+            var SERVER_OAUTH_URL = "http://192.168.100.10/web/app_dev.php/oauth/v2/token";
+
+            /**
+             *
+             */
+            function login(login, password) {
+                var ajaxCall = $.ajax({
+                    type: "POST",
+                    url: SERVER_BASE_URL + "security",
+                    dataType: "json",
+                    data: {
+                        user_l: login,
+                        user_p: password
+                    },
+                    success:function(pResponse){
+                        localStorage.setItem('us_id', pResponse.id);
+                        localStorage.setItem('us_ak', pResponse.api_key);
+
+                        getToken(true);
+                    },
+                    error:function(error){
+                        console.log(error);
+                    }
+                });
+            }
+
+            /**
+             *
+             */
+            function getToken(afterLogin=false)
+            {
+                $.ajax({
+                    type: "GET",
+                    url: SERVER_OAUTH_URL,
+                    dataType: "json",
+                    data: {
+                        client_id: "2_rfe22y1mrr40ssww8oco88os040gk48swss0c40w4s0oc008w",
+                        client_secret:"2glo704mz8g08sc4o80sgoco4cg4cgkccgg4kow00osgcs4kgo",
+                        grant_type: "http://competences3csi.com/grants/api_key",
+                        api_key: localStorage.getItem('us_ak')
+                    },
+                    success:function( pResponse ){
+                        localStorage.setItem('tok', pResponse.access_token);
+                        localStorage.setItem('ref_tok', pResponse.refresh_token);
+
+                        getUsers();
+                    },
+                    error:function(error){
+                        console.log(error);
+                    }
+                });
+            }
+
+            /**
+             *
+             */
+            function refreshToken()
+            {
+                $.ajax({
+                    type: "GET",
+                    url: SERVER_OAUTH_URL,
+                    dataType: "json",
+                    data: {
+                        client_id: "1_4ch10dbeikyssswoo044ss40ok44swkgwgkkwoc04kw84gc4s8",
+                        client_secret:"nbwyzrv661c8wckso8g48cggs48484wgcoskw80sw4s8kcg80",
+                        grant_type: "refresh_token",
+                        refresh_token: localStorage.getItem('ref_tok')
+                    },
+                    success:function( pResponse ){
+                        localStorage.setItem('tok', pResponse.access_token);
+                        localStorage.setItem('ref_tok', pResponse.refresh_token);
+                    },
+                    error:function(error){
+                        console.log(error);
+                    }
+                });
+            }
+
+            /**
+             *
+             */
+            function getUsers()
+            {
+                $.ajax({
+                    type: "GET",
+                    url: "http://192.168.100.10/web/app_dev.php/api/user/",
+                    dataType: "json",
+                    data: {
+                        "access_token": localStorage.getItem('tok')
+                    },
+                    success:function( pResponse ){
+                        console.log(pResponse);
+                    },
+                    error:function(error){
+                        console.log(error);
+                    }
+                });
+            }
+
+            return {
+                "login": login,
+                "getToken": getToken,
+                "refreshToken": refreshToken
+            }
+
+        })();
+        PlayerAPIUtils.login("jarnal", "jarnal");
+    </script>
+
+</body>
+</html>

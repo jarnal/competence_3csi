@@ -46,7 +46,7 @@ class SecurityRestController extends FOSRestController
      *
      * @View(serializerGroups={"PlayerGlobal"})
      *
-     * @POST("/", name="credentials", options={"method_prefix"=false})
+     * @POST("/security", name="credentials", options={"method_prefix"=false})
      */
     public function credentialsAction(Request $request)
     {
@@ -55,7 +55,7 @@ class SecurityRestController extends FOSRestController
 
         $userEntity = $this->getService()->getByLoginPasswordOr404($user_login, $user_pwd);
 
-        $arr = array("api_key"=>$userEntity->getApiKey(), "student_id"=>$userEntity->getId());
+        $arr = array("api_key"=>$userEntity->getApiKey(), "user_id"=>$userEntity->getId());
         $response = new JSONResponse($arr);
         return $response;
     }
