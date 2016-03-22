@@ -17,8 +17,6 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
             new PeopleBundle\PeopleBundle(),
-            new CarBundle\CarBundle(),
-            new RideBundle\RideBundle(),
             new GlobalBundle\GlobalBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new FOS\RestBundle\FOSRestBundle(),
@@ -27,6 +25,9 @@ class AppKernel extends Kernel
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
             new RestSecurityBundle\RestSecurityBundle(),
+            new SkillBundle\SkillBundle(),
+            new SchoolBundle\SchoolBundle(),
+            new EvaluationBundle\EvaluationBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
