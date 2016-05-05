@@ -3,6 +3,7 @@
 namespace PeopleBundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use PeopleBundle\Abstraction\SpecificUserInterface;
 use JMS\Serializer\Annotation\ExclusionPolicy;
@@ -15,8 +16,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * User
  *
- * @ORM\Table(name="user")
+ * @ORM\Table(name="c3csi_user")
  * @ORM\Entity(repositoryClass="PeopleBundle\Repository\UserRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"user" = "User", "usager" = "Usager", "intervenant" = "Intervenant"})
  *
  * @ExclusionPolicy("all")
  */
@@ -43,7 +47,7 @@ class User extends BaseUser
      * @Groups({"UserGlobal","UserDetails"})
      * @Expose
      */
-    private $firstname;
+    protected $firstname;
 
     /**
      * Last name of the user.
@@ -54,7 +58,7 @@ class User extends BaseUser
      * @Groups({"UserGlobal","UserDetails"})
      * @Expose
      */
-    private $lastname;
+    protected $lastname;
 
     /**
      * Api key of the user.
@@ -63,7 +67,7 @@ class User extends BaseUser
      * @ORM\Column(name="api_key", type="string", nullable=true)
      *
      */
-    private $api_key;
+    protected $api_key;
 
     /**
      * User constructor.

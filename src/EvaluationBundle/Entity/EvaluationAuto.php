@@ -13,10 +13,11 @@ use SkillBundle\Entity\Competence;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Diplome
- *
  * @ORM\Table(name="c3csi_evaluation_auto")
- * @ORM\Entity(repositoryClass="EvaluationBundle\Repository\TypeNoteRepository")
+ * @ORM\Entity(repositoryClass="EvaluationBundle\Repository\EvaluationAutoRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({"auto" = "EvaluationAuto", "intervenant" = "EvaluationIntervenant", "examen" = "EvaluationExamen"})
  *
  * @ExclusionPolicy("all")
  */
@@ -37,7 +38,7 @@ class EvaluationAuto {
      * When the evaluation has been created
      *
      * @var \DateTime
-     * @ORM\Column(name="evaluated_at", type="datetime", nullable=true)
+     * @ORM\Column(name="evaluated_at", type="datetime")
      */
     protected $evaluated_at;
 
@@ -45,7 +46,7 @@ class EvaluationAuto {
      * The user who has been evaluated
      *
      * @var User
-     * @ORM\ManyToOne(targetEntity="PeopleBundle\Entity\User", inversedBy="evaluations")
+     * @ORM\ManyToOne(targetEntity="PeopleBundle\Entity\Usager")
      */
     protected $user;
 
@@ -53,7 +54,7 @@ class EvaluationAuto {
      * The competence to wich the user has been evaluated
      *
      * @var Competence
-     * @ORM\ManyToOne(targetEntity="SchoolBundle\Entity\Competence")
+     * @ORM\ManyToOne(targetEntity="SkillBundle\Entity\Competence")
      * @ORM\JoinColumn(name="competence_id", referencedColumnName="id")
      */
     protected $competence;
@@ -67,4 +68,75 @@ class EvaluationAuto {
      */
     protected $note;
 
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEvaluatedAt()
+    {
+        return $this->evaluated_at;
+    }
+
+    /**
+     * @param mixed $evaluated_at
+     */
+    public function setEvaluatedAt($evaluated_at)
+    {
+        $this->evaluated_at = $evaluated_at;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return Competence
+     */
+    public function getCompetence()
+    {
+        return $this->competence;
+    }
+
+    /**
+     * @param Competence $competence
+     */
+    public function setCompetence($competence)
+    {
+        $this->competence = $competence;
+    }
+
+    /**
+     * @return TypeNote
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+
+    /**
+     * @param TypeNote $note
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+    }
 }
