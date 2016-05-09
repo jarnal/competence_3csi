@@ -1,0 +1,6 @@
+#
+c3csi_school_matiere_rest:
+    type: rest
+    resource: "SchoolBundle:MatiereRest"
+    name_prefix: api_matiere_
+    prefix: matiere

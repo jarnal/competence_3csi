@@ -30,7 +30,7 @@ class Competence
      * @ORM\GeneratedValue(strategy="AUTO")
      *
      * @Expose
-     * @Groups({"Global"})
+     * @Groups({"Default"})
      */
     private $id;
 
@@ -40,7 +40,7 @@ class Competence
      * @var string
      * @ORM\Column(name="name", type="string")
      *
-     * @Groups({"Global"})
+     * @Groups({"Default"})
      * @Expose
      */
     private $name;

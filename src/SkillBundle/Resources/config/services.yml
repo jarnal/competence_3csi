@@ -1,4 +1,11 @@
+parameters:
+    #
+    skill_bundle.service.competence.class: SkillBundle\Service\CompetenceService
+    skill_bundle.entity.competence.class: SkillBundle\Entity\Competence
+    skill_bundle.form.competence.class: SkillBundle\Form\CompetenceType
+    skill_bundle.form_exception.competence.class: SkillBundle\Exception\InvalidCompetenceFormException
+
 services:
-#    skill.example:
-#        class: SkillBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    skill_bundle.service.competence:
+        class: %skill_bundle.service.competence.class%
+        arguments: [@doctrine.orm.entity_manager, @form.factory, %skill_bundle.entity.competence.class%, %skill_bundle.form.competence.class%, %skill_bundle.form_exception.competence.class%]

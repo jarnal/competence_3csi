@@ -1,4 +1,4 @@
-css_people_user_rest:
+c3csi_people_user_rest:
     type: rest
     resource: "PeopleBundle:UserRest"
     name_prefix: api_user_

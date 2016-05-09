@@ -46,8 +46,8 @@
                     url: SERVER_OAUTH_URL,
                     dataType: "json",
                     data: {
-                        client_id: "2_rfe22y1mrr40ssww8oco88os040gk48swss0c40w4s0oc008w",
-                        client_secret:"2glo704mz8g08sc4o80sgoco4cg4cgkccgg4kow00osgcs4kgo",
+                        client_id: "1_2lp2nq4n5acksksg8ks4w80gskg8kockggwg08w008so8gkw4s",
+                        client_secret:"22b4bent9e74ggggss8wgk0s0o88w408sgw8oksggw4c000cs",
                         grant_type: "http://competences3csi.com/grants/api_key",
                         api_key: localStorage.getItem('us_ak')
                     },
@@ -95,7 +95,7 @@
             {
                 $.ajax({
                     type: "GET",
-                    url: "http://192.168.100.10/web/app_dev.php/api/user/",
+                    url: "http://192.168.100.10/web/app_dev.php/api/matiere/",
                     dataType: "json",
                     data: {
                         "access_token": localStorage.getItem('tok')

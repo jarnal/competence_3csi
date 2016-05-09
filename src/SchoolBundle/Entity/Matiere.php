@@ -29,7 +29,7 @@ class Matiere {
      * @ORM\GeneratedValue(strategy="AUTO")
      *
      * @Expose
-     * @Groups({"Global"})
+     * @Groups({"Default"})
      */
     private $id;
 
@@ -39,7 +39,7 @@ class Matiere {
      * @var string
      * @ORM\Column(name="name", type="string")
      *
-     * @Groups({"Global"})
+     * @Groups({"Default"})
      * @Expose
      */
     private $name;
@@ -50,8 +50,8 @@ class Matiere {
      * @var ArrayCollection
      * @ORM\ManyToMany(targetEntity="SkillBundle\Entity\Competence", inversedBy="matieres")
      * @ORM\JoinTable(name="c3csi_competence_rel_matiere",
-     *      joinColumns={@ORM\JoinColumn(name="competence_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="matiere_id", referencedColumnName="id")}
+     *      joinColumns={@ORM\JoinColumn(name="matiere_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="competence_id", referencedColumnName="id")}
      * )
      */
     private $competences;

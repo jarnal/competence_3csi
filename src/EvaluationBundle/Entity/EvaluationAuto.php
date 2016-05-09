@@ -13,7 +13,7 @@ use SkillBundle\Entity\Competence;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="c3csi_evaluation_auto")
+ * @ORM\Table(name="c3csi_evaluation")
  * @ORM\Entity(repositoryClass="EvaluationBundle\Repository\EvaluationAutoRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="discr", type="string")

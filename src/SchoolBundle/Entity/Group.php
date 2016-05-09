@@ -51,7 +51,7 @@ class Group {
      * Period (year) of the group
      *
      * @var string
-     * @ORM\Column(name="periode", type="string")
+     * @ORM\Column(name="periode", type="date")
      *
      * @Groups({"Global"})
      * @Expose

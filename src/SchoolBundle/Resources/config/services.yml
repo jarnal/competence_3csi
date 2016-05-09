@@ -1,4 +1,11 @@
+parameters:
+    #
+    school_bundle.service.matiere.class: SchoolBundle\Service\MatiereService
+    school_bundle.entity.matiere.class: SchoolBundle\Entity\Matiere
+    school_bundle.form.matiere.class: SchoolBundle\Form\MatiereType
+    school_bundle.form_exception.matiere.class: SchoolBundle\Exception\InvalidMatiereFormException
+
 services:
-#    school.example:
-#        class: SchoolBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    school_bundle.service.matiere:
+        class: %school_bundle.service.matiere.class%
+        arguments: [@doctrine.orm.entity_manager, @form.factory, %school_bundle.entity.matiere.class%, %school_bundle.form.matiere.class%, %school_bundle.form_exception.matiere.class%]

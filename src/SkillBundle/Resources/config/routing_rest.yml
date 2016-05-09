@@ -1,0 +1,6 @@
+#
+c3csi_skill_competence_rest:
+    type: rest
+    resource: "SkillBundle:CompetenceRest"
+    name_prefix: api_competence_
+    prefix: competence
