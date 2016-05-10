@@ -33,7 +33,7 @@ class Examen {
      * @ORM\GeneratedValue(strategy="AUTO")
      *
      * @Expose
-     * @Groups({"Global"})
+     * @Groups({"Default"})
      */
     private $id;
 
@@ -43,7 +43,7 @@ class Examen {
      * @var string
      * @ORM\Column(name="name", type="string")
      *
-     * @Groups({"Global"})
+     * @Groups({"Default"})
      * @Expose
      */
     private $name;
@@ -54,7 +54,7 @@ class Examen {
      * @var string
      * @ORM\Column(name="description", type="string")
      *
-     * @Groups({"Global"})
+     * @Groups({"Default"})
      * @Expose
      */
     private $description;

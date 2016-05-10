@@ -1,11 +1,23 @@
+# Parameters
 parameters:
-    #
+    # Matiere Parameters
     school_bundle.service.matiere.class: SchoolBundle\Service\MatiereService
     school_bundle.entity.matiere.class: SchoolBundle\Entity\Matiere
     school_bundle.form.matiere.class: SchoolBundle\Form\MatiereType
     school_bundle.form_exception.matiere.class: SchoolBundle\Exception\InvalidMatiereFormException
+    # Group Parameters
+    school_bundle.service.group.class: SchoolBundle\Service\GroupService
+    school_bundle.entity.group.class: SchoolBundle\Entity\Group
+    school_bundle.form.group.class: SchoolBundle\Form\GroupType
+    school_bundle.form_exception.group.class: SchoolBundle\Exception\InvalidGroupFormException
 
+# Services
 services:
+    # Matiere Services
     school_bundle.service.matiere:
         class: %school_bundle.service.matiere.class%
         arguments: [@doctrine.orm.entity_manager, @form.factory, %school_bundle.entity.matiere.class%, %school_bundle.form.matiere.class%, %school_bundle.form_exception.matiere.class%]
+    # Group Services
+    school_bundle.service.group:
+        class: %school_bundle.service.group.class%
+        arguments: [@doctrine.orm.entity_manager, @form.factory, %school_bundle.entity.group.class%, %school_bundle.form.group.class%, %school_bundle.form_exception.group.class%]

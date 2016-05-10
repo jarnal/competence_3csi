@@ -133,7 +133,7 @@ class ExamenRestController extends FOSRestController
      */
     protected function getService()
     {
-        return $this->container->get('evalutation_bundle.service.examen');
+        return $this->container->get('evaluation_bundle.service.examen');
     }
 
 }

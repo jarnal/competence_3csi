@@ -1,10 +1,10 @@
 parameters:
     people_bundle.service.user.class: PeopleBundle\Service\UserService
     people_bundle.entity.user.class: PeopleBundle\Entity\User
-    player_bundle.form.user.class: PeopleBundle\Form\UserType
-    player_bundle.form_exception.user.class: PeopleBundle\Exception\InvalidUserFormException
+    people_bundle.form.user.class: PeopleBundle\Form\UserType
+    people_bundle.form_exception.user.class: PeopleBundle\Exception\InvalidUserFormException
 
 services:
-    player_bundle.service.user:
+    people_bundle.service.user:
         class: %people_bundle.service.user.class%
-        arguments: [@doctrine.orm.entity_manager, @form.factory, %people_bundle.entity.user.class%, %player_bundle.form.user.class%, %player_bundle.form_exception.user.class%, @security.encoder_factory]
+        arguments: [@doctrine.orm.entity_manager, @form.factory, %people_bundle.entity.user.class%, %people_bundle.form.user.class%, %people_bundle.form_exception.user.class%, @security.encoder_factory]

@@ -61,6 +61,15 @@ class UserService extends EntityRestService
     }
 
     /**
+     * Returns the users related to the group passed in parameter
+     *
+     * @param $groupID
+     */
+    public function findByGroupId($groupID) {
+        return $this->repository->findByGroupId($groupID);
+    }
+
+    /**
      * Returns a user by his username and password.
      *
      * @param $login

@@ -32,7 +32,7 @@ class Group {
      * @ORM\GeneratedValue(strategy="AUTO")
      *
      * @Expose
-     * @Groups({"Global"})
+     * @Groups({"Default"})
      */
     private $id;
 
@@ -42,7 +42,7 @@ class Group {
      * @var string
      * @ORM\Column(name="name", type="string")
      *
-     * @Groups({"Global"})
+     * @Groups({"Default"})
      * @Expose
      */
     private $name;
@@ -53,7 +53,7 @@ class Group {
      * @var string
      * @ORM\Column(name="periode", type="date")
      *
-     * @Groups({"Global"})
+     * @Groups({"Default"})
      * @Expose
      */
     private $periode;

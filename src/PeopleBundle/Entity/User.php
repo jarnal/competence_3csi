@@ -31,7 +31,7 @@ class User extends BaseUser
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      *
-     * @Groups({"UserAPIKey", "UserGlobal","UserDetails"})
+     * @Groups({"Default"})
      * @Expose
      */
     protected $id;
@@ -44,7 +44,7 @@ class User extends BaseUser
      * @Assert\NotBlank( message="form.player.firstname.blank" )
      * @Assert\NotNull( message="form.player.firstname.null" )
      *
-     * @Groups({"UserGlobal","UserDetails"})
+     * @Groups({"Details"})
      * @Expose
      */
     protected $firstname;
@@ -55,7 +55,7 @@ class User extends BaseUser
      * @var string
      * @ORM\Column(name="lastname", type="string")
      *
-     * @Groups({"UserGlobal","UserDetails"})
+     * @Groups({"Details"})
      * @Expose
      */
     protected $lastname;
@@ -151,6 +151,16 @@ class User extends BaseUser
     public function getApiKey()
     {
         return $this->api_key;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("name")
+     * @Groups({"Default"})
+     */
+    public function name()
+    {
+        return $this->firstname." ".$this->lastname;
     }
 
 }

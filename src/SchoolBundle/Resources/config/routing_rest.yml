@@ -4,3 +4,10 @@ c3csi_school_matiere_rest:
     resource: "SchoolBundle:MatiereRest"
     name_prefix: api_matiere_
     prefix: matiere
+
+#
+c3csi_school_group_rest:
+    type: rest
+    resource: "SchoolBundle:GroupRest"
+    name_prefix: api_group_
+    prefix: group
