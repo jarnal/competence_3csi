@@ -94,6 +94,14 @@ class ExamenRestController extends FOSRestController
     }
 
     /**
+     * @param $data
+     */
+    public function postAction($data)
+    {
+
+    }
+
+    /**
      * Deletes an examen depending on the passed id.
      *
      * @ApiDoc(

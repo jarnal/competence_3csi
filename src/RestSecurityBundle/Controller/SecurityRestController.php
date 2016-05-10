@@ -72,7 +72,7 @@ class SecurityRestController extends FOSRestController
      */
     protected function getService()
     {
-        return $this->container->get('player_bundle.service.user');
+        return $this->container->get('people_bundle.service.user');
     }
 
 }
