@@ -6,8 +6,9 @@
  * Time: 18:10
  */
 
-namespace SchoolBundle\Controller;
+namespace EvaluationBundle\Controller;
 
+use EvaluationBundle\Entity\Examen;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Put;
@@ -16,31 +17,30 @@ use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
 use GlobalBundle\Abstraction\EntityServiceInterface;
-use SchoolBundle\Entity\Matiere;
 use SkillBundle\Entity\Competence;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
-class MatiereRestController extends FOSRestController
+class ExamenRestController extends FOSRestController
 {
 
     /**
-     * Returns all matieres.
+     * Returns all examens.
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="Matieres API",
+     *  section="Examens API",
      *  output={
-     *      "class"="SchoolBundle\Entity\Matiere",
+     *      "class"="SchoolBundle\Entity\Examen",
      *      "collection"=true,
      *      "groups"={"Default"},
      *      "parsers" = {
      *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser",
      *          "Nelmio\ApiDocBundle\Parser\CollectionParser"
      *      },
-     *      "collectionName" = "matieres"
+     *      "collectionName" = "examens"
      *  }
      * )
      *
@@ -52,33 +52,33 @@ class MatiereRestController extends FOSRestController
      */
     public function getAllAction()
     {
-        return array("matieres"=>$this->getService()->getAll());
+        return array("examens"=>$this->getService()->getAll());
     }
 
     /**
-     * Returns a matiere by id.
+     * Returns a examen by id.
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="Matiere API",
+     *  section="Examen API",
      *  requirements={
      *      {
      *          "name"="id",
      *          "dataType"="integer",
      *          "requirement"="\d+",
-     *          "description"="Matiere id"
+     *          "description"="Examen id"
      *      }
      *  },
      *  output={
-     *      "class"="SchoolBundle\Entity\Matiere",
+     *      "class"="SchoolBundle\Entity\Examen",
      *      "parsers" = {
      *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser"
      *      },
      *      "groups"={"Default"}
      *  },
      *  statusCodes = {
-     *     200 = "Returned when matiere exists",
-     *     404 = "Returned when the matiere is not found"
+     *     200 = "Returned when examen exists",
+     *     404 = "Returned when the examen is not found"
      *   }
      * )
      *
@@ -86,7 +86,7 @@ class MatiereRestController extends FOSRestController
      *
      * @Get("/{id}", name="get", options={"method_prefix" = false}, requirements={"id"="\d+"})
      *
-     * @return Matiere
+     * @return Examen
      */
     public function getAction($id)
     {
@@ -94,21 +94,21 @@ class MatiereRestController extends FOSRestController
     }
 
     /**
-     * Deletes a game depending on the passed id.
+     * Deletes an examen depending on the passed id.
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="Game API",
+     *  section="Examen API",
      *  statusCodes = {
-     *      200 = "Returned when game has been successfully deleted.",
-     *      404 = "Returned when game doesn't exist."
+     *      200 = "Returned when examen has been successfully deleted.",
+     *      404 = "Returned when examen doesn't exist."
      *  },
      *  requirements={
      *      {
      *          "name"="id",
      *          "dataType"="integer",
      *          "requirement"="\d+",
-     *          "description"="Game id"
+     *          "description"="Examen id"
      *      }
      *  }
      * )
@@ -127,55 +127,13 @@ class MatiereRestController extends FOSRestController
     }
 
     /**
-     * Returns all competences for a given matiere.
-     *
-     * @ApiDoc(
-     *  resource=true,
-     *  section="Matiere API",
-     *  requirements={
-     *      {
-     *          "name"="id",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="Matiere id"
-     *      }
-     *  },
-     *  output={
-     *      "class"="SkillBundle\Entity\Competence",
-     *      "collection"=true,
-     *      "collectionName"="competences",
-     *      "parsers" = {
-     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser",
-     *          "Nelmio\ApiDocBundle\Parser\CollectionParser"
-     *      },
-     *      "groups"={"Default"}
-     *  },
-     *  statusCodes = {
-     *     200 = "Returned when matiere exists",
-     *     404 = "Returned when the matiere is not found"
-     *   }
-     * )
-     *
-     * @View( serializerGroups={"Default"} )
-     *
-     * @Get("/{id}/competences", name="get_competences", options={ "method_prefix" = false })
-     *
-     * @return Competence
-     */
-    public function listCompetencesAction($id)
-    {
-        $this->getService()->getOr404($id);
-        return $this->container->get('skill_bundle.service.competence')->findByMatiereId($id);
-    }
-
-    /**
      * Returns the appropriate service to handle related entity.
      *
      * @return EntityServiceInterface
      */
     protected function getService()
     {
-        return $this->container->get('school_bundle.service.matiere');
+        return $this->container->get('evalutation_bundle.service.examen');
     }
 
 }

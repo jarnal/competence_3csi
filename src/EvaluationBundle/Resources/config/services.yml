@@ -1,4 +1,11 @@
+parameters:
+    #
+    evaluation_bundle.service.examen.class: EvaluationBundle\Service\ExamenService
+    evaluation_bundle.entity.examen.class: EvaluationBundle\Entity\Examen
+    evaluation_bundle.form.examen.class: EvaluationBundle\Form\ExamenType
+    evaluation_bundle.form_exception.examen.class: EvaluationBundle\Exception\InvalidExamenFormException
+
 services:
-#    evaluation.example:
-#        class: EvaluationBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    evaluation_bundle.service.examen:
+        class: %evaluation_bundle.service.examen.class%
+        arguments: [@doctrine.orm.entity_manager, @form.factory, %evaluation_bundle.entity.examen.class%, %evaluation_bundle.form.examen.class%, %evaluation_bundle.form_exception.examen.class%]

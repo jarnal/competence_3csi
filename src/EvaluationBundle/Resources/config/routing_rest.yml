@@ -1,0 +1,6 @@
+#
+c3csi_evaluation_examen_rest:
+    type: rest
+    resource: "EvaluationBundle:ExamenRest"
+    name_prefix: api_examen_
+    prefix: examen
