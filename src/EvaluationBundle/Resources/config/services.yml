@@ -4,8 +4,18 @@ parameters:
     evaluation_bundle.entity.examen.class: EvaluationBundle\Entity\Examen
     evaluation_bundle.form.examen.class: EvaluationBundle\Form\ExamenType
     evaluation_bundle.form_exception.examen.class: EvaluationBundle\Exception\InvalidExamenFormException
+    #
+    evaluation_bundle.service.type_note.class: EvaluationBundle\Service\TypeNoteService
+    evaluation_bundle.entity.type_note.class: EvaluationBundle\Entity\TypeNote
+    evaluation_bundle.form.type_note.class: EvaluationBundle\Form\TypeNoteType
+    evaluation_bundle.form_exception.type_note.class: EvaluationBundle\Exception\InvalidTypeNoteFormException
 
 services:
+    #
     evaluation_bundle.service.examen:
         class: %evaluation_bundle.service.examen.class%
         arguments: [@doctrine.orm.entity_manager, @form.factory, %evaluation_bundle.entity.examen.class%, %evaluation_bundle.form.examen.class%, %evaluation_bundle.form_exception.examen.class%]
+    #
+    evaluation_bundle.service.type_note:
+        class: %evaluation_bundle.service.type_note.class%
+        arguments: [@doctrine.orm.entity_manager, @form.factory, %evaluation_bundle.entity.type_note.class%, %evaluation_bundle.form.type_note.class%, %evaluation_bundle.form_exception.type_note.class%]

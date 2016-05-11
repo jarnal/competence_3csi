@@ -25,9 +25,6 @@ class TypeNote {
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @Expose
-     * @Groups({"Global"})
      */
     private $id;
 
@@ -93,6 +90,16 @@ class TypeNote {
     public function setValue($value)
     {
         $this->value = $value;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("name")
+     * @Groups({"Default"})
+     */
+    public function name()
+    {
+        return $this->value."- ".$this->label;
     }
 
 }

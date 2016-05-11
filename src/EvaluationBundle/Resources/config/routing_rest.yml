@@ -4,3 +4,10 @@ c3csi_evaluation_examen_rest:
     resource: "EvaluationBundle:ExamenRest"
     name_prefix: api_examen_
     prefix: examen
+
+#
+c3csi_evaluation_type_note_rest:
+    type: rest
+    resource: "EvaluationBundle:TypeNoteRest"
+    name_prefix: api_type_note_
+    prefix: type_note
