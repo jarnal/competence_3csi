@@ -151,7 +151,6 @@ class EvaluationIntervenantRestController extends FOSRestController
      * @View(
      *  serializerGroups={"Default"},
      *  template="EvaluationBundle:EvaluationIntervenant:evaluatiojintervenantForm.html.twig",
-     *  statusCode= Codes::HTTP_BAD_REQUEST,
      *  templateVar = "form"
      * )
      *
@@ -166,10 +165,14 @@ class EvaluationIntervenantRestController extends FOSRestController
         $typeNoteService = $this->container->get("evaluation_bundle.service.type_note");
         $userService = $this->container->get("people_bundle.service.user");
 
+        $noteLabel = $request->request->get("type_note_label");
+        $noteValue = explode("-", $noteLabel)[0];
+        $noteID = $typeNoteService->findOneByValue($noteValue);
+
         $evaluation = new EvaluationIntervenant();
         $evaluation->setCompetence( $competenceService->getOr404($request->request->get("competence_id")) );
         $evaluation->setIntervenant( $this->get('security.context')->getToken()->getUser() );
-        $evaluation->setNote( $typeNoteService->getOr404($request->request->get("type_note_id")) );
+        $evaluation->setNote( $typeNoteService->getOr404($noteID) );
         $evaluation->setUser( $userService->getOr404($request->request->get("user_id")) );
         $evaluation->setEvaluatedAt( new \DateTime() );
 

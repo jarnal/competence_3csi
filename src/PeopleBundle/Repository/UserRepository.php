@@ -60,31 +60,31 @@ class UserRepository extends EntityRepository
     public function findByListWithEvaluations($userList, $competenceList)
     {
 
-        $sql =  "SELECT tmp.userID, CONCAT(tmp.userFirstname, ' ' , tmp.userLastname) as userName, tmp.discr, ".
-                "tmp.competenceID, tmp.competenceName, ".
-                "COALESCE(tn.id,'') AS typeNoteID, CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as typeNoteLabel  " .
-                    "FROM c3csi_evaluation ev " .
-                    "RIGHT JOIN " .
-                    "(SELECT u.id as userID, u.firstname as userFirstname, u.lastname as userLastname, u.discr, c.id as competenceID, c.name as competenceName " .
-                        "FROM c3csi_user u, c3csi_competence c " .
-                        "WHERE u.id IN (?) " .
-                            "AND c.id IN (?) " .
-                    ") as tmp " .
-                    "ON ev.user_id = tmp.userID AND ev.competence_id = tmp.competenceID ".
-                    "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id ".
-                    "AND ev. ";
+        $sql =  "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr,
+                c.id AS competence_id, c.name AS competence_name,
+                CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label  " .
+                "FROM c3csi_user u ".
+                "CROSS JOIN c3csi_competence c ON c.id IN (?) ".
+                "LEFT JOIN c3csi_evaluation ev ON ev.user_id = u.id AND ev.competence_id = c.id AND ev.evaluated_at = ( ".
+                    "SELECT MAX(evaluated_at) ".
+                    "FROM c3csi_evaluation ev2 ".
+	                "WHERE ev2.user_id = u.id AND ev2.competence_id = c.id ".
+	                "GROUP BY user_id, competence_id ".
+                ") ".
+                "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id ".
+                "WHERE u.id IN (?) ".
+                "ORDER BY u.id ";
 
         $rsm = new ResultSetMapping();
-        $rsm->addScalarResult("userID", "user_id");
-        $rsm->addScalarResult("userName", "user_name");
-        $rsm->addScalarResult("competenceID", "competence_id");
-        $rsm->addScalarResult("competenceName", "competence_name");
-        $rsm->addScalarResult("typeNoteID", "type_note_id");
-        $rsm->addScalarResult("typeNoteLabel", "type_note_label");
+        $rsm->addScalarResult("user_id", "user_id");
+        $rsm->addScalarResult("user_name", "user_name");
+        $rsm->addScalarResult("competence_id", "competence_id");
+        $rsm->addScalarResult("competence_name", "competence_name");
+        $rsm->addScalarResult("type_note_label", "type_note_label");
 
         $query = $this->_em->createNativeQuery($sql, $rsm);
-        $query->setParameter(1, $userList);
-        $query->setParameter(2, $competenceList);
+        $query->setParameter(1, $competenceList);
+        $query->setParameter(2, $userList);
         $result = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
 
         return $result;

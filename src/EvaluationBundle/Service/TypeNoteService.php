@@ -26,4 +26,11 @@ class TypeNoteService extends EntityRestService
         parent::__construct($pEntityManager, $pFormFactory, $pEntityClass, null, null);
     }
 
+    /**
+     * @param $value
+     */
+    public function findOneByValue($value){
+        return $this->repository->findOneByValue($value);
+    }
+
 }
