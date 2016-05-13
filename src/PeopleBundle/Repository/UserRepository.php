@@ -1,6 +1,7 @@
 <?php
 
 namespace PeopleBundle\Repository;
+
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 
@@ -18,8 +19,8 @@ class UserRepository extends EntityRepository
      */
     public function findAll()
     {
-        $sql =  "SELECT * ".
-                "FROM c3csi_user";
+        $sql = "SELECT * " .
+            "FROM c3csi_user";
 
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult('PeopleBundle\Entity\User', 'u');
@@ -36,21 +37,57 @@ class UserRepository extends EntityRepository
     /**
      * @param $id
      */
-    public function findOneById($id, $fullObject=true)
+    public function findOneById($id, $fullObject = true)
     {
         $query = $this->createQueryBuilder('user');
         $query->where('user.id = :userID')
-            ->setParameter('userID', $id)
-        ;
+            ->setParameter('userID', $id);
 
-        if($fullObject){
+        if ($fullObject) {
             //?
         }
         $result = $query->getQuery()->getResult();
-        if(isset($result[0])){
+        if (isset($result[0])) {
             return $result[0];
         }
         return $query->getQuery()->getResult();
+    }
+
+    /**
+     * @param $userList
+     * @param $competenceList
+     */
+    public function findByListWithEvaluations($userList, $competenceList)
+    {
+
+        $sql =  "SELECT tmp.userID, CONCAT(tmp.userFirstname, ' ' , tmp.userLastname) as userName, tmp.discr, ".
+                "tmp.competenceID, tmp.competenceName, ".
+                "COALESCE(tn.id,'') AS typeNoteID, CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as typeNoteLabel  " .
+                    "FROM c3csi_evaluation ev " .
+                    "RIGHT JOIN " .
+                    "(SELECT u.id as userID, u.firstname as userFirstname, u.lastname as userLastname, u.discr, c.id as competenceID, c.name as competenceName " .
+                        "FROM c3csi_user u, c3csi_competence c " .
+                        "WHERE u.id IN (?) " .
+                            "AND c.id IN (?) " .
+                    ") as tmp " .
+                    "ON ev.user_id = tmp.userID AND ev.competence_id = tmp.competenceID ".
+                    "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id ".
+                    "AND ev. ";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult("userID", "user_id");
+        $rsm->addScalarResult("userName", "user_name");
+        $rsm->addScalarResult("competenceID", "competence_id");
+        $rsm->addScalarResult("competenceName", "competence_name");
+        $rsm->addScalarResult("typeNoteID", "type_note_id");
+        $rsm->addScalarResult("typeNoteLabel", "type_note_label");
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $userList);
+        $query->setParameter(2, $competenceList);
+        $result = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        return $result;
     }
 
     /**
@@ -58,12 +95,13 @@ class UserRepository extends EntityRepository
      *
      * @param $groupID
      */
-    public function findByGroupId($groupID) {
-        $sql =  "SELECT user.id, user.firstname, user.lastname ".
-                "FROM c3csi_group grp ".
-                "LEFT JOIN c3csi_group_rel_user grp_rel_us ON grp_rel_us.group_id = grp.id ".
-                "LEFT JOIN c3csi_user user ON user.id = grp_rel_us.user_id ".
-                "WHERE grp.id = ?";
+    public function findByGroupId($groupID)
+    {
+        $sql = "SELECT user.id, user.firstname, user.lastname " .
+            "FROM c3csi_group grp " .
+            "LEFT JOIN c3csi_group_rel_user grp_rel_us ON grp_rel_us.group_id = grp.id " .
+            "LEFT JOIN c3csi_user user ON user.id = grp_rel_us.user_id " .
+            "WHERE grp.id = ?";
 
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult('PeopleBundle\Entity\User', 'u');

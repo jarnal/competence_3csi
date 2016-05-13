@@ -11,3 +11,24 @@ c3csi_evaluation_type_note_rest:
     resource: "EvaluationBundle:TypeNoteRest"
     name_prefix: api_type_note_
     prefix: type_note
+
+#
+c3csi_evaluation_evaluation_auto_rest:
+    type: rest
+    resource: "EvaluationBundle:EvaluationAutoRest"
+    name_prefix: api_evaluation_auto_
+    prefix: evaluation_auto
+
+#
+c3csi_evaluation_evaluation_intervenant_rest:
+    type: rest
+    resource: "EvaluationBundle:EvaluationIntervenantRest"
+    name_prefix: api_evaluation_intervenant_
+    prefix: evaluation_intervenant
+
+#
+c3csi_evaluation_evaluation_examen_rest:
+    type: rest
+    resource: "EvaluationBundle:EvaluationExamenRest"
+    name_prefix: api_evaluation_examen_
+    prefix: evaluation_examen

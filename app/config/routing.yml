@@ -1,18 +1,3 @@
-evaluation:
-    resource: "@EvaluationBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-school:
-    resource: "@SchoolBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
-skill:
-    resource: "@SkillBundle/Controller/"
-    type:     annotation
-    prefix:   /
-
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
 

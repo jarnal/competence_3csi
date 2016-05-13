@@ -32,6 +32,11 @@ security:
             fos_oauth:  true
             stateless:  true
 
+        api_evaluation_intervenant:
+            pattern:    ^/api/evaluation_intervenant
+            fos_oauth:  true
+            stateless:  true
+
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }

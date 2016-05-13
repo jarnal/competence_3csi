@@ -24,6 +24,13 @@ interface EntityServiceInterface
     public function getOr404($id, $fullObject=true);
 
     /**
+     * Saves and entity without passing by form.
+     *
+     * @param $entity
+     */
+    public function save($entity);
+
+    /**
      * Post an entity form, creates a new entity.
      *
      * @param array $parameters Post entity parameters.

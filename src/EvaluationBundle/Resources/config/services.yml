@@ -4,11 +4,30 @@ parameters:
     evaluation_bundle.entity.examen.class: EvaluationBundle\Entity\Examen
     evaluation_bundle.form.examen.class: EvaluationBundle\Form\ExamenType
     evaluation_bundle.form_exception.examen.class: EvaluationBundle\Exception\InvalidExamenFormException
+
     #
     evaluation_bundle.service.type_note.class: EvaluationBundle\Service\TypeNoteService
     evaluation_bundle.entity.type_note.class: EvaluationBundle\Entity\TypeNote
     evaluation_bundle.form.type_note.class: EvaluationBundle\Form\TypeNoteType
     evaluation_bundle.form_exception.type_note.class: EvaluationBundle\Exception\InvalidTypeNoteFormException
+
+    #
+    evaluation_bundle.service.evaluation_auto.class: EvaluationBundle\Service\EvaluationAutoService
+    evaluation_bundle.entity.evaluation_auto.class: EvaluationBundle\Entity\EvaluationAuto
+    evaluation_bundle.form.evaluation_auto.class: EvaluationBundle\Form\EvaluationAutoType
+    evaluation_bundle.form_exception.evaluation_auto.class: EvaluationBundle\Exception\InvalidEvaluationAutoFormException
+
+    #
+    evaluation_bundle.service.evaluation_intervenant.class: EvaluationBundle\Service\EvaluationIntervenantService
+    evaluation_bundle.entity.evaluation_intervenant.class: EvaluationBundle\Entity\EvaluationIntervenant
+    evaluation_bundle.form.evaluation_intervenant.class: EvaluationBundle\Form\EvaluationIntervenantType
+    evaluation_bundle.form_exception.evaluation_intervenant.class: EvaluationBundle\Exception\InvalidEvaluationIntervenantFormException
+
+    #
+    evaluation_bundle.service.evaluation_examen.class: EvaluationBundle\Service\EvaluationExamenService
+    evaluation_bundle.entity.evaluation_examen.class: EvaluationBundle\Entity\EvaluationExamen
+    evaluation_bundle.form.evaluation_examen.class: EvaluationBundle\Form\EvaluationExamenType
+    evaluation_bundle.form_exception.evaluation_examen.class: EvaluationBundle\Exception\InvalidEvaluationExamenFormException
 
 services:
     #
@@ -19,3 +38,18 @@ services:
     evaluation_bundle.service.type_note:
         class: %evaluation_bundle.service.type_note.class%
         arguments: [@doctrine.orm.entity_manager, @form.factory, %evaluation_bundle.entity.type_note.class%, %evaluation_bundle.form.type_note.class%, %evaluation_bundle.form_exception.type_note.class%]
+
+    #
+    evaluation_bundle.service.evaluation_auto:
+        class: %evaluation_bundle.service.evaluation_auto.class%
+        arguments: [@doctrine.orm.entity_manager, @form.factory, %evaluation_bundle.entity.type_note.class%, %evaluation_bundle.form.evaluation_auto.class%, %evaluation_bundle.form_exception.evaluation_auto.class%]
+
+    #
+    evaluation_bundle.service.evaluation_intervenant:
+        class: %evaluation_bundle.service.evaluation_intervenant.class%
+        arguments: [@doctrine.orm.entity_manager, @form.factory, %evaluation_bundle.entity.evaluation_intervenant.class%, %evaluation_bundle.form.evaluation_intervenant.class%, %evaluation_bundle.form_exception.evaluation_intervenant.class%]
+
+    #
+    evaluation_bundle.service.evaluation_examen:
+        class: %evaluation_bundle.service.evaluation_examen.class%
+        arguments: [@doctrine.orm.entity_manager, @form.factory, %evaluation_bundle.entity.type_note.class%, %evaluation_bundle.form.evaluation_examen.class%, %evaluation_bundle.form_exception.evaluation_examen.class%]

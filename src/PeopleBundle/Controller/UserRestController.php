@@ -104,6 +104,48 @@ class UserRestController extends FOSRestController
     }
 
     /**
+     * Returns a user by id.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="User API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="User id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="\PeopleBundle\Entity\User",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/ulist/{users_id}/clist/{competences_id}", name="get_note_by_competence", options={"method_prefix" = false}, requirements={"id"="\d+"})
+     *
+     * @return User
+     */
+    public function listCompetencesByUsersListAction($users_id, $competences_id){
+        $usersList = json_decode($users_id);
+        $competencesList = json_decode($competences_id);
+
+        $result = $this->getService()->findByListWithEvaluations($usersList, $competencesList);
+
+        return $result;
+    }
+
+    /**
      * Adds a new user.
      *
      * @ApiDoc(
@@ -130,7 +172,8 @@ class UserRestController extends FOSRestController
      */
     public function postAction(Request $request)
     {
-        try {
+        return $request->request;
+        /*try {
             $form = new UserType();
             $user = $this->getService()->post(
                 $request->request->get($form->getName())
@@ -144,7 +187,7 @@ class UserRestController extends FOSRestController
             return $this->routeRedirectView('api_user_get', $routeOptions, Codes::HTTP_CREATED);
         } catch (InvalidUserFormException $exception) {
             return $exception->getForm();
-        }
+        }*/
     }
 
     /**
@@ -305,7 +348,7 @@ class UserRestController extends FOSRestController
      */
     protected function getService()
     {
-        return $this->container->get('player_bundle.service.user');
+        return $this->container->get('people_bundle.service.user');
     }
 
 }

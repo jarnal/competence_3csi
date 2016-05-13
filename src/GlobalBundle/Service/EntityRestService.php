@@ -75,6 +75,14 @@ abstract class EntityRestService implements EntityServiceInterface
     }
 
     /**
+     * @param $entity
+     */
+    public function save($entity){
+        $this->em->persist($entity);
+        $this->em->flush($entity);
+    }
+
+    /**
      *
      *
      * @param array $pParameters

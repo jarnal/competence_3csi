@@ -61,6 +61,14 @@ class UserService extends EntityRestService
     }
 
     /**
+     * @param $userList
+     * @param $competenceList
+     */
+    public function findByListWithEvaluations($userList, $competenceList){
+        return $this->repository->findByListWithEvaluations($userList, $competenceList);
+    }
+
+    /**
      * Returns the users related to the group passed in parameter
      *
      * @param $groupID
