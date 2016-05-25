@@ -30,7 +30,7 @@ class EvaluationAuto {
      * @ORM\GeneratedValue(strategy="AUTO")
      *
      * @Expose
-     * @Groups({"Global"})
+     * @Groups({"Default"})
      */
     private $id;
 
@@ -47,6 +47,9 @@ class EvaluationAuto {
      *
      * @var User
      * @ORM\ManyToOne(targetEntity="PeopleBundle\Entity\Usager")
+     *
+     * @Expose
+     * @Groups({"Default"})
      */
     protected $user;
 
@@ -65,6 +68,9 @@ class EvaluationAuto {
      * @var TypeNote
      * @ORM\ManyToOne(targetEntity="EvaluationBundle\Entity\TypeNote")
      * @ORM\JoinColumn(name="note_id", referencedColumnName="id")
+     *
+     * @Expose
+     * @Groups({"Default"})
      */
     protected $note;
 

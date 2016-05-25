@@ -36,6 +36,15 @@ class ExamenService extends EntityRestService
     }
 
     /**
+     * Returns the examens related to the group passed in parameter
+     *
+     * @param $groupID
+     */
+    public function findByUserId($userID) {
+        return $this->repository->findByUserId($userID);
+    }
+
+    /**
      * Returns the examens related to the intervenant passed in parameter
      *
      * @param $intervenantID

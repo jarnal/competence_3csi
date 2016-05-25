@@ -35,4 +35,12 @@ class CompetenceService extends EntityRestService
         return $this->repository->findByMatiereId($matiereID);
     }
 
+    /**
+     * @param $examenID
+     * @return mixed
+     */
+    public function findByExamenId($examenID){
+        return $this->repository->findByExamenId($examenID);
+    }
+
 }

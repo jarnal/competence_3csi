@@ -2,8 +2,10 @@
 
 namespace PeopleBundle\Controller;
 
+use EvaluationBundle\Entity\Examen;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
+use SchoolBundle\Entity\Matiere;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,6 +106,90 @@ class UserRestController extends FOSRestController
     }
 
     /**
+     * Returns all matieres for a given group.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="User API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="User id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="SchoolBundle\Entity\Matiere",
+     *      "collection"=true,
+     *      "collectionName"="matieres",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser",
+     *          "Nelmio\ApiDocBundle\Parser\CollectionParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when group exists",
+     *     404 = "Returned when the group is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/{id}/matieres", name="get_matieres", options={ "method_prefix" = false })
+     *
+     * @return Matiere
+     */
+    public function listMatieresAction($id)
+    {
+        $this->getService()->getOr404($id);
+        return $this->container->get('school_bundle.service.matiere')->findByUserId($id);
+    }
+
+    /**
+     * Returns all examens for a given group.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="Group API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Group id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="SkillBundle\Entity\Competence",
+     *      "collection"=true,
+     *      "collectionName"="examens",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser",
+     *          "Nelmio\ApiDocBundle\Parser\CollectionParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when group exists",
+     *     404 = "Returned when the group is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/{id}/examens", name="get_examens", options={ "method_prefix" = false })
+     *
+     * @return Examen
+     */
+    public function listExamensAction($id)
+    {
+        $this->getService()->getOr404($id);
+        return $this->container->get('evaluation_bundle.service.examen')->findByUserId($id);
+    }
+
+    /**
      * Returns a user by id.
      *
      * @ApiDoc(
@@ -132,7 +218,7 @@ class UserRestController extends FOSRestController
      *
      * @View( serializerGroups={"Default"} )
      *
-     * @Get("/ulist/{users_id}/clist/{competences_id}", name="get_note_by_competence", options={"method_prefix" = false}, requirements={"id"="\d+"})
+     * @Get("/evaluations/ulist/{users_id}/clist/{competences_id}", name="get_note_by_competence_partial", options={"method_prefix" = false}, requirements={"id"="\d+"})
      *
      * @return User
      */
@@ -141,9 +227,205 @@ class UserRestController extends FOSRestController
         $competencesList = json_decode($competences_id);
 
         $result = $this->getService()->findByListWithEvaluations($usersList, $competencesList);
-
         return $result;
     }
+
+    /**
+     * Returns a user by id.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="User API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="User id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="\PeopleBundle\Entity\User",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/evaluations/examen/{examen_id}/ulist/{users_id}/clist/{competences_id}", name="get_note_by_competence_examen", options={"method_prefix" = false}, requirements={"id"="\d+"})
+     *
+     * @return User
+     */
+    public function listEvaluationsForUsersByExamenAndSpecificListAction($examen_id, $users_id, $competences_id){
+        $usersList = json_decode($users_id);
+        $competencesList = json_decode($competences_id);
+
+        $result = $this->getService()->findByExamenAndSpecificList($examen_id, $usersList, $competencesList);
+        return $result;
+    }
+
+    /**
+     * Returns a user by id.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="User API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="User id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="\PeopleBundle\Entity\User",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/evaluations/group/{group_id}/examen/{examen_id}", name="get_evaluation_by_group_examen", options={"method_prefix" = false}, requirements={"id"="\d+"})
+     *
+     * @return User
+     */
+    public function listEvaluationsForUsersByGroupAndExamenAction($group_id, $examen_id) {
+        $result = $this->getService()->findByGroupWithEvaluationsForExamen($group_id, $examen_id);
+        return $result;
+    }
+
+    /**
+     * Returns a user by id.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="User API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="User id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="\PeopleBundle\Entity\User",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/evaluations/group/{group_id}/matiere/{matiere_id}", name="get_evaluation_by_group_matiere", options={"method_prefix" = false}, requirements={"id"="\d+"})
+     *
+     * @return User
+     */
+    public function listEvaluationsForUsersByGroupAndMatiereAction($group_id, $matiere_id) {
+        $result = $this->getService()->findByGroupWithEvaluationsForMatiere($group_id, $matiere_id);
+        return $result;
+    }
+
+    //------------------------------------------------------------
+
+    /**
+     * Returns a user by id.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="User API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="User id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="\PeopleBundle\Entity\User",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/evaluations/user/{user_id}/examen/{examen_id}", name="get_evaluation_by_examen", options={"method_prefix" = false}, requirements={"id"="\d+"})
+     *
+     * @return User
+     */
+    public function listEvaluationsForUserByExamenAction($user_id, $examen_id) {
+        $result = $this->getService()->findByUserWithEvaluationsForExamen($user_id, $examen_id);
+        return $result;
+    }
+
+    /**
+     * Returns a user by id.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="User API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="User id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="\PeopleBundle\Entity\User",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/evaluations/user/{user_id}/matiere/{matiere_id}", name="get_evaluation_by_matiere", options={"method_prefix" = false}, requirements={"id"="\d+"})
+     *
+     * @return User
+     */
+    public function listEvaluationsForUserByMatiereAction($user_id, $matiere_id) {
+        $result = $this->getService()->findByUserWithEvaluationsForMatiere($user_id, $matiere_id);
+        return $result;
+    }
+
+    //------------------------------------------------------------
 
     /**
      * Adds a new user.

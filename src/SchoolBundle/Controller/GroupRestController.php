@@ -213,6 +213,48 @@ class GroupRestController extends FOSRestController
     }
 
     /**
+     * Returns all matieres for a given group.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="Group API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Group id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="SchoolBundle\Entity\Matiere",
+     *      "collection"=true,
+     *      "collectionName"="matieres",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser",
+     *          "Nelmio\ApiDocBundle\Parser\CollectionParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when group exists",
+     *     404 = "Returned when the group is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/{id}/matieres", name="get_matieres", options={ "method_prefix" = false })
+     *
+     * @return User
+     */
+    public function listMatieresAction($id)
+    {
+        $this->getService()->getOr404($id);
+        return $this->container->get('school_bundle.service.matiere')->findByGroupId($id);
+    }
+
+    /**
      * Returns the appropriate service to handle related entity.
      *
      * @return EntityServiceInterface

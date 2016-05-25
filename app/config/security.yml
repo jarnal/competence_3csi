@@ -37,6 +37,20 @@ security:
             fos_oauth:  true
             stateless:  true
 
+        api_evaluation_examen:
+            pattern:    ^/api/evaluation_examen
+            fos_oauth:  true
+            stateless:  true
+
+        api_evaluation_auto:
+            pattern:    ^/api/evaluation_auto
+            fos_oauth:  true
+            stateless:  true
+
+        api_examen:
+            pattern:    ^/api/examen
+            fos_oauth:  true
+            stateless:  true
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }

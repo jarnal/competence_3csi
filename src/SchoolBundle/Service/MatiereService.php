@@ -22,9 +22,26 @@ class MatiereService extends EntityRestService
 
     /**
      * @param $intervantID
+     * @return mixed
      */
     public function findMatieresByIntervenant($intervantID) {
         return $this->repository->findMatieresByIntervenant($intervantID);
+    }
+
+    /**
+     * @param $groupID
+     * @return mixed
+     */
+    public function findByGroupId($groupID) {
+        return $this->repository->findMatieresByGroup($groupID);
+    }
+
+    /**
+     * @param $userID
+     * @return mixed
+     */
+    public function findByUserId($userID) {
+        return $this->repository->findMatieresByUser($userID);
     }
 
 }

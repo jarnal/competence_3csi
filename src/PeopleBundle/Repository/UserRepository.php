@@ -59,27 +59,309 @@ class UserRepository extends EntityRepository
      */
     public function findByListWithEvaluations($userList, $competenceList)
     {
-
-        $sql =  "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr,
+        $sql = "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr,
                 c.id AS competence_id, c.name AS competence_name,
                 CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label  " .
-                "FROM c3csi_user u ".
-                "CROSS JOIN c3csi_competence c ON c.id IN (?) ".
-                "LEFT JOIN c3csi_evaluation ev ON ev.user_id = u.id AND ev.competence_id = c.id AND ev.evaluated_at = ( ".
-                    "SELECT MAX(evaluated_at) ".
-                    "FROM c3csi_evaluation ev2 ".
-	                "WHERE ev2.user_id = u.id AND ev2.competence_id = c.id ".
-	                "GROUP BY user_id, competence_id ".
-                ") ".
-                "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id ".
-                "WHERE u.id IN (?) ".
-                "ORDER BY u.id ";
+            "FROM c3csi_user u " .
+            "CROSS JOIN c3csi_competence c ON c.id IN (?) " .
+            "LEFT JOIN c3csi_evaluation ev ON ev.user_id = u.id AND ev.competence_id = c.id AND ev.evaluated_at = ( " .
+            "SELECT MAX(evaluated_at) " .
+            "FROM c3csi_evaluation ev2 " .
+            "WHERE ev2.user_id = u.id AND ev2.competence_id = c.id " .
+            "GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id " .
+            "WHERE u.id IN (?) " .
+            "ORDER BY u.id ";
 
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult("user_id", "user_id");
         $rsm->addScalarResult("user_name", "user_name");
         $rsm->addScalarResult("competence_id", "competence_id");
         $rsm->addScalarResult("competence_name", "competence_name");
+        $rsm->addScalarResult("type_note_label", "type_note_label");
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $competenceList);
+        $query->setParameter(2, $userList);
+        $result = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        return $result;
+    }
+
+    /**
+     * @param $userList
+     * @param $competenceList
+     */
+    public function findByExamenAndSpecificList($examenID, $userList, $competenceList)
+    {
+        $sql = "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr,
+                c.id AS competence_id, c.name AS competence_name,
+                CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label  " .
+            "FROM c3csi_user u " .
+            "CROSS JOIN c3csi_competence c ON c.id IN (?) " .
+            "LEFT JOIN c3csi_evaluation ev ON ev.evaluated_at = ( " .
+            "SELECT MAX(evaluated_at) " .
+            "FROM c3csi_evaluation ev2 " .
+            "WHERE ev2.user_id = u.id AND ev2.competence_id = c.id AND ev2.examen_id = ? " .
+            "GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id " .
+            "WHERE u.id IN (?) " .
+            "ORDER BY u.id ";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult("user_id", "user_id");
+        $rsm->addScalarResult("user_name", "user_name");
+        $rsm->addScalarResult("competence_id", "competence_id");
+        $rsm->addScalarResult("competence_name", "competence_name");
+        $rsm->addScalarResult("type_note_label", "type_note_label");
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $competenceList);
+        $query->setParameter(2, $examenID);
+        $query->setParameter(3, $userList);
+        $result = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        return $result;
+    }
+
+    /**
+     * @param $groupID
+     * @param $examen
+     */
+    public function findByUserWithEvaluationsForExamen($userID, $examenID)
+    {
+        $sql = "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr, " .
+            "c.id AS competence_id, c.name AS competence_name, " .
+            "CONCAT( COALESCE(tn_auto.value,''), '- ', COALESCE(tn_auto.label,'') ) as type_note_label_auto, COALESCE(tn_auto.value,'-') as type_note_value_auto, " .
+            "CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
+            "FROM c3csi_user u " .
+            "LEFT JOIN c3csi_group_rel_user grp_rel_us ON grp_rel_us.user_id = u.id " .
+            "LEFT JOIN c3csi_examen_rel_competence ex_rel_comp ON ex_rel_comp.examen_id = ? " .
+            "CROSS JOIN c3csi_competence c ON c.id = ex_rel_comp.competence_id " .
+            "LEFT JOIN c3csi_evaluation ev_auto ON ev_auto.evaluated_at = ( " .
+            "   SELECT MAX(evaluated_at) " .
+            "   FROM c3csi_evaluation ev3 " .
+            "   WHERE ev3.user_id = u.id AND ev3.competence_id = c.id AND ev_auto.competence_id = c.id AND ev3.discr = 'auto' " .
+            "   GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn_auto ON tn_auto.id = ev_auto.note_id " .
+            "LEFT JOIN c3csi_evaluation ev ON ev.evaluated_at = ( " .
+            "   SELECT MAX(evaluated_at) " .
+            "   FROM c3csi_evaluation ev2 " .
+            "   WHERE ev2.user_id = u.id AND ev2.competence_id = c.id AND ev2.competence_id = c.id AND ev2.examen_id = ex_rel_comp.examen_id " .
+            "   GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id " .
+            "WHERE u.id = ? " .
+            "ORDER BY u.id, c.id";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult("user_id", "user_id");
+        $rsm->addScalarResult("user_name", "user_name");
+        $rsm->addScalarResult("competence_id", "competence_id");
+        $rsm->addScalarResult("competence_name", "competence_name");
+        $rsm->addScalarResult("type_note_value_auto", "type_note_value_auto");
+        $rsm->addScalarResult("type_note_value", "type_note_value");
+        $rsm->addScalarResult("type_note_label_auto", "type_note_label_auto");
+        $rsm->addScalarResult("type_note_label", "type_note_label");
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $examenID);
+        $query->setParameter(2, $userID);
+        $result = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        return $result;
+    }
+
+    /**
+     * @param $groupID
+     * @param $examen
+     */
+    public function findByUserWithEvaluationsForMatiere($userID, $matiereID)
+    {
+        $sql =
+            "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr, " .
+            "c.id AS competence_id, c.name AS competence_name, " .
+            "CONCAT( COALESCE(tn_auto.value,''), '- ', COALESCE(tn_auto.label,'') ) as type_note_label_auto, COALESCE( tn_auto.value,'-') as type_note_value_auto, " .
+            "CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
+            "FROM c3csi_user u " .
+            "LEFT JOIN c3csi_group_rel_user grp_rel_us ON grp_rel_us.user_id = u.id " .
+            "LEFT JOIN c3csi_enseignement ens ON ens.group_id = grp_rel_us.group_id AND ens.matiere_id = ? " .
+            "LEFT JOIN c3csi_competence_rel_matiere comp_rel_mat ON comp_rel_mat.matiere_id = ens.matiere_id " .
+            "CROSS JOIN c3csi_competence c ON c.id = comp_rel_mat.competence_id " .
+            "LEFT JOIN c3csi_evaluation ev_auto ON ev_auto.evaluated_at = ( " .
+            "	SELECT MAX(evaluated_at) " .
+            "	FROM c3csi_evaluation ev3 " .
+            "	WHERE ev3.user_id = u.id AND ev3.competence_id = c.id AND ev_auto.competence_id = c.id AND ev3.discr = 'auto' " .
+            "	GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn_auto ON tn_auto.id = ev_auto.note_id " .
+            "LEFT JOIN c3csi_evaluation ev ON ev.evaluated_at = ( " .
+            "	SELECT MAX(evaluated_at) " .
+            "	FROM c3csi_evaluation ev2 " .
+            "	WHERE ev2.user_id = u.id AND ev2.competence_id = c.id AND ev2.competence_id = c.id AND NOT ev2.discr = 'auto' " .
+            "	GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id " .
+            "WHERE u.id = ? " .
+            "ORDER BY u.id, c.id; ";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult("user_id", "user_id");
+        $rsm->addScalarResult("user_name", "user_name");
+        $rsm->addScalarResult("competence_id", "competence_id");
+        $rsm->addScalarResult("competence_name", "competence_name");
+        $rsm->addScalarResult("type_note_value_auto", "type_note_value_auto");
+        $rsm->addScalarResult("type_note_value", "type_note_value");
+        $rsm->addScalarResult("type_note_label_auto", "type_note_label_auto");
+        $rsm->addScalarResult("type_note_label", "type_note_label");
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $matiereID);
+        $query->setParameter(2, $userID);
+        $result = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        return $result;
+    }
+
+    /**
+     * @param $groupID
+     * @param $examen
+     */
+    public function findByGroupWithEvaluationsForExamen($groupID, $examenID)
+    {
+        $sql = "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr, " .
+            "c.id AS competence_id, c.name AS competence_name, " .
+            "CONCAT( COALESCE(tn_auto.value,''), '- ', COALESCE(tn_auto.label,'') ) as type_note_label_auto, COALESCE(tn_auto.value,'-') as type_note_value_auto, " .
+            "CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
+            "FROM c3csi_group grp " .
+            "LEFT JOIN c3csi_group_rel_user grp_rel_us ON grp_rel_us.group_id = grp.id " .
+            "LEFT JOIN c3csi_user u ON u.id = grp_rel_us.user_id " .
+            "LEFT JOIN c3csi_examen_rel_competence ex_rel_comp ON ex_rel_comp.examen_id = ? " .
+            "CROSS JOIN c3csi_competence c ON c.id = ex_rel_comp.competence_id " .
+            "LEFT JOIN c3csi_evaluation ev_auto ON ev_auto.user_id = u.id AND ev_auto.competence_id = c.id AND ev_auto.discr = 'auto' AND ev_auto.evaluated_at = ( " .
+            "   SELECT MAX(evaluated_at) " .
+            "   FROM c3csi_evaluation ev3 " .
+            "   WHERE ev3.user_id = u.id AND ev3.competence_id = c.id AND ev3.discr = 'auto' " .
+            "   GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn_auto ON tn_auto.id = ev_auto.note_id " .
+            "LEFT JOIN c3csi_evaluation ev ON ev.user_id = u.id AND ev.competence_id = c.id AND ev.discr = 'examen' AND ev.examen_id = ex_rel_comp.examen_id AND ev.evaluated_at = ( " .
+            "   SELECT MAX(evaluated_at) " .
+            "   FROM c3csi_evaluation ev2 " .
+            "   WHERE ev2.user_id = u.id AND ev2.competence_id = c.id AND ev2.examen_id = ex_rel_comp.examen_id AND ev2.discr = 'examen' " .
+            "   GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id " .
+            "WHERE grp.id = ? " .
+            "ORDER BY u.id, c.id; ";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult("user_id", "user_id");
+        $rsm->addScalarResult("user_name", "user_name");
+        $rsm->addScalarResult("competence_id", "competence_id");
+        $rsm->addScalarResult("competence_name", "competence_name");
+        $rsm->addScalarResult("type_note_value_auto", "type_note_value_auto");
+        $rsm->addScalarResult("type_note_value", "type_note_value");
+        $rsm->addScalarResult("type_note_label_auto", "type_note_label_auto");
+        $rsm->addScalarResult("type_note_label", "type_note_label");
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $examenID);
+        $query->setParameter(2, $groupID);
+        $result = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        return $result;
+    }
+
+    /**
+     * @param $groupID
+     * @param $examen
+     */
+    public function findByGroupWithEvaluationsForMatiere($groupID, $matiereID)
+    {
+        $sql = "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr, " .
+            "c.id AS competence_id, c.name AS competence_name, " .
+            "CONCAT( COALESCE(tn_auto.value,''), '- ', COALESCE(tn_auto.label,'') ) as type_note_label_auto, COALESCE(tn_auto.value,'-') as type_note_value_auto, " .
+            "CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
+            "FROM c3csi_group grp " .
+            "LEFT JOIN c3csi_group_rel_user grp_rel_us ON grp_rel_us.group_id = grp.id " .
+            "LEFT JOIN c3csi_user u ON u.id = grp_rel_us.user_id " .
+            "LEFT JOIN c3csi_enseignement ens ON ens.group_id = grp.id AND ens.matiere_id = ? " .
+            "LEFT JOIN c3csi_competence_rel_matiere comp_rel_mat ON comp_rel_mat.matiere_id = ens.matiere_id " .
+            "CROSS JOIN c3csi_competence c ON c.id = comp_rel_mat.competence_id " .
+            "LEFT JOIN c3csi_evaluation ev_auto ON ev_auto.user_id = u.id AND ev_auto.competence_id = c.id AND ev_auto.discr = 'auto' AND ev_auto.evaluated_at = ( " .
+            "	SELECT MAX(evaluated_at) " .
+            "	FROM c3csi_evaluation ev3 " .
+            "	WHERE ev3.user_id = u.id AND ev3.competence_id = c.id AND ev3.discr = 'auto' " .
+            "	GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn_auto ON tn_auto.id = ev_auto.note_id " .
+            "LEFT JOIN c3csi_evaluation ev ON ev.user_id = u.id AND ev.competence_id = c.id AND (ev.discr = 'examen' OR ev.discr = 'intervenant') AND ev.evaluated_at = ( " .
+            "	SELECT MAX(evaluated_at) " .
+            "	FROM c3csi_evaluation ev2 " .
+            "	WHERE ev2.user_id = u.id AND ev2.competence_id = c.id AND (ev.discr = 'examen' OR ev.discr = 'intervenant') " .
+            "	GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id " .
+            "WHERE grp.id = ? " .
+            "ORDER BY u.id, c.id";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult("user_id", "user_id");
+        $rsm->addScalarResult("user_name", "user_name");
+        $rsm->addScalarResult("competence_id", "competence_id");
+        $rsm->addScalarResult("competence_name", "competence_name");
+        $rsm->addScalarResult("type_note_value_auto", "type_note_value_auto");
+        $rsm->addScalarResult("type_note_value", "type_note_value");
+        $rsm->addScalarResult("type_note_label_auto", "type_note_label_auto");
+        $rsm->addScalarResult("type_note_label", "type_note_label");
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $matiereID);
+        $query->setParameter(2, $groupID);
+        $result = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        return $result;
+    }
+
+    /**
+     * @param $userList
+     * @param $competenceList
+     */
+    public function findByListWithEvaluationsAndAutoEvaluations($userList, $competenceList)
+    {
+        $sql = "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr, " .
+            "c.id AS competence_id, c.name AS competence_name, " .
+            "CONCAT( COALESCE(tn_auto.value,''), '- ', COALESCE(tn_auto.label,'') ) as type_note_label_auto, " .
+            "CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label " .
+            "FROM c3csi_user u " .
+            "CROSS JOIN c3csi_competence c ON c.id IN (?) " .
+            "LEFT JOIN c3csi_evaluation ev_auto ON ev_auto.user_id = u.id AND ev_auto.competence_id = c.id AND ev_auto.discr = 'auto' AND ev_auto.evaluated_at = ( " .
+            "	SELECT MAX(evaluated_at) " .
+            "	FROM c3csi_evaluation ev3 " .
+            "	WHERE ev3.user_id = u.id AND ev3.competence_id = c.id AND ev3.discr = 'auto' " .
+            "	GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn_auto ON tn_auto.id = ev_auto.note_id " .
+            "LEFT JOIN c3csi_evaluation ev ON ev.user_id = u.id AND ev.competence_id = c.id AND ev.discr = 'intervenant' AND ev.evaluated_at = ( " .
+            "	SELECT MAX(evaluated_at) " .
+            "	FROM c3csi_evaluation ev2 " .
+            "	WHERE ev2.user_id = u.id AND ev2.competence_id = c.id AND ev2.discr = 'intervenant' " .
+            "	GROUP BY user_id, competence_id " .
+            ") " .
+            "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id " .
+            "WHERE u.id IN (?) " .
+            "ORDER BY u.id ";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult("user_id", "user_id");
+        $rsm->addScalarResult("user_name", "user_name");
+        $rsm->addScalarResult("competence_id", "competence_id");
+        $rsm->addScalarResult("competence_name", "competence_name");
+        $rsm->addScalarResult("type_note_label_auto", "type_note_label_auto");
         $rsm->addScalarResult("type_note_label", "type_note_label");
 
         $query = $this->_em->createNativeQuery($sql, $rsm);

@@ -69,6 +69,51 @@ class UserService extends EntityRestService
     }
 
     /**
+     * @param $groupID
+     * @param $examenID
+     * @return mixed
+     */
+    public function findByUserWithEvaluationsForExamen($userID, $examenID){
+        return $this->repository->findByUserWithEvaluationsForExamen($userID, $examenID);
+    }
+
+    /**
+     * @param $groupID
+     * @param $examenID
+     * @return mixed
+     */
+    public function findByUserWithEvaluationsForMatiere($userID, $matiereID){
+        return $this->repository->findByUserWithEvaluationsForMatiere($userID, $matiereID);
+    }
+
+    /**
+     * @param $groupID
+     * @param $examenID
+     * @return mixed
+     */
+    public function findByGroupWithEvaluationsForExamen($groupID, $examenID){
+        return $this->repository->findByGroupWithEvaluationsForExamen($groupID, $examenID);
+    }
+
+    /**
+     * @param $groupID
+     * @param $examenID
+     * @return mixed
+     */
+    public function findByGroupWithEvaluationsForMatiere($groupID, $matiereID){
+        return $this->repository->findByGroupWithEvaluationsForMatiere($groupID, $matiereID);
+    }
+
+    /**
+     * @param $groupID
+     * @param $examenID
+     * @return mixed
+     */
+    public function findByExamenAndSpecificList($examenID, $userList, $competenceList){
+        return $this->repository->findByExamenAndSpecificList($examenID, $userList, $competenceList);
+    }
+
+    /**
      * Returns the users related to the group passed in parameter
      *
      * @param $groupID
@@ -87,11 +132,13 @@ class UserService extends EntityRestService
     public function getByLoginPassword($login, $password)
     {
         $entity = $this->repository->findOneBy(array("username"=>$login));
-        $factory = $this->encoderFactory;
-        $encoder = $factory->getEncoder($entity);
-        $isPwdValid = $encoder->isPasswordValid( $entity->getPassword(), $password, $entity->getSalt() );
-
-        return $isPwdValid? $entity : false;
+        if($entity) {
+            $factory = $this->encoderFactory;
+            $encoder = $factory->getEncoder($entity);
+            $isPwdValid = $encoder->isPasswordValid( $entity->getPassword(), $password, $entity->getSalt() );
+            return $isPwdValid? $entity : false;
+        }
+        return false;
     }
 
     /**

@@ -82,4 +82,54 @@ class MatiereRepository extends EntityRepository
         return $result;
     }
 
+    /**
+     *
+     *
+     * @param $groupID
+     * @return array
+     */
+    public function findMatieresByGroup($groupID){
+        $sql =  "SELECT mat.id, mat.name ".
+            "FROM c3csi_enseignement ens ".
+            "LEFT JOIN c3csi_matiere mat ON mat.id = ens.matiere_id ".
+            "WHERE ens.group_id = ?";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('SchoolBundle\Entity\Matiere' , 'mat');
+        $rsm->addFieldResult('mat', 'id', 'id');
+        $rsm->addFieldResult('mat', 'name', 'name');
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $groupID);
+        $result = $query->getResult();
+
+        return $result;
+    }
+
+    /**
+     *
+     *
+     * @param $groupID
+     * @return array
+     */
+    public function findMatieresByUser($userID){
+        $sql =  "SELECT mat.id, mat.name ".
+                "FROM c3csi_user us ".
+                "LEFT JOIN c3csi_group_rel_user grus ON grus.user_id = us.id ".
+                "LEFT JOIN c3csi_enseignement ens ON ens.group_id = grus.group_id ".
+                "LEFT JOIN c3csi_matiere mat ON mat.id = ens.matiere_id ".
+                "WHERE us.id = ?";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('SchoolBundle\Entity\Matiere' , 'mat');
+        $rsm->addFieldResult('mat', 'id', 'id');
+        $rsm->addFieldResult('mat', 'name', 'name');
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $userID);
+        $result = $query->getResult();
+
+        return $result;
+    }
+
 }

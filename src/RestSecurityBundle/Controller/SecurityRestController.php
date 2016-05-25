@@ -53,14 +53,19 @@ class SecurityRestController extends FOSRestController
         $user_login = $request->request->get('user_l');
         $user_pwd = $request->request->get('user_p');
 
-        $userEntity = $this->getService()->getByLoginPasswordOr404($user_login, $user_pwd);
+        $userEntity = $this->getService()->getByLoginPassword($user_login, $user_pwd);
 
-        $arr = array(
-            "api_key"=>$userEntity->getApiKey(),
-            "user_id"=>$userEntity->getId(),
-            "user_name" => $userEntity->getFirstname()." ".$userEntity->getLastname(),
-            "user_role" => $userEntity->getRoles()[0]
-        );
+        if(!$userEntity){
+            $arr = array("success" => false);
+        } else {
+            $arr = array(
+                "success"=>true,
+                "api_key"=>$userEntity->getApiKey(),
+                "user_id"=>$userEntity->getId(),
+                "user_name" => $userEntity->getFirstname()." ".$userEntity->getLastname(),
+                "user_role" => $userEntity->getRoles()[0]
+            );
+        }
         $response = new JSONResponse($arr);
         return $response;
     }

@@ -66,19 +66,48 @@ class ExamenRepository extends EntityRepository
      * @param $groupID
      */
     public function findByGroupId($groupID) {
-        $sql =  "SELECT exam.id, exam.name ".
+        $sql =  "SELECT exam.id, exam.name, exam.description, exam.date ".
                 "FROM c3csi_group grp ".
                 "LEFT JOIN c3csi_examen exam ON exam.group_id = grp.id ".
-                "WHERE grp.id = ?";
+                "WHERE grp.id = ? ".
+                "ORDER BY date DESC";
 
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult('EvaluationBundle\Entity\Examen', 'm');
         $rsm->addFieldResult('m', 'id', 'id');
         $rsm->addFieldResult('m', 'name', 'name');
         $rsm->addFieldResult('m', 'description', 'description');
+        $rsm->addFieldResult('m', 'date', 'date');
 
         $query = $this->_em->createNativeQuery($sql, $rsm);
         $query->setParameter(1, $groupID);
+        $result = $query->getResult();
+
+        return $result;
+    }
+
+    /**
+     * Returns the examens related to the group passed in parameter
+     *
+     * @param $groupID
+     */
+    public function findByUserId($userID) {
+        $sql =  "SELECT exam.id, exam.name, exam.description, exam.date ".
+            "FROM c3csi_user u ".
+            "LEFT JOIN c3csi_group_rel_user grus ON grus.user_id = u.id ".
+            "LEFT JOIN c3csi_examen exam ON exam.group_id = grus.group_id ".
+            "WHERE u.id = ? ".
+            "ORDER BY date DESC";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('EvaluationBundle\Entity\Examen', 'm');
+        $rsm->addFieldResult('m', 'id', 'id');
+        $rsm->addFieldResult('m', 'name', 'name');
+        $rsm->addFieldResult('m', 'description', 'description');
+        $rsm->addFieldResult('m', 'date', 'date');
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $userID);
         $result = $query->getResult();
 
         return $result;
@@ -90,16 +119,18 @@ class ExamenRepository extends EntityRepository
      * @param $intervenantID
      */
     public function findByIntervenantId($intervenantID) {
-        $sql =  "SELECT exam.id, exam.name, exam.description ".
+        $sql =  "SELECT exam.id, exam.name, exam.description, exam.date ".
                 "FROM c3csi_user user ".
                 "LEFT JOIN c3csi_examen exam ON exam.intervenant_id = user.id ".
-                "WHERE user.id = ?";
+                "WHERE user.id = ? ".
+                "ORDER BY date DESC";
 
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult('EvaluationBundle\Entity\Examen', 'm');
         $rsm->addFieldResult('m', 'id', 'id');
         $rsm->addFieldResult('m', 'name', 'name');
         $rsm->addFieldResult('m', 'description', 'description');
+        $rsm->addFieldResult('m', 'date', 'date');
 
         $query = $this->_em->createNativeQuery($sql, $rsm);
         $query->setParameter(1, $intervenantID);

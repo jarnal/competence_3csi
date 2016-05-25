@@ -60,6 +60,15 @@ class Examen {
     private $description;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(name="date", type="datetime")
+     *
+     * @Groups({"Default"})
+     * @Expose
+     */
+    private $date;
+
+    /**
      *
      *
      * @var Intervenant
@@ -81,7 +90,7 @@ class Examen {
      * @var ArrayCollection
      * @ORM\ManyToMany(targetEntity="SkillBundle\Entity\Competence")
      * @ORM\JoinTable(name="c3csi_examen_rel_competence",
-     *      joinColumns={@ORM\JoinColumn(name="examen_id", referencedColumnName="id")},
+     *      joinColumns={@ORM\JoinColumn(name="examen_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="competence_id", referencedColumnName="id")}
      *      )
      */
@@ -136,6 +145,36 @@ class Examen {
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param \DateTime $date
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+    }
+
+    /**
+     * @VirtualProperty
+     * @SerializedName("date")
+     * @Groups({"Default"})
+     */
+    public function dateFormatted()
+    {
+        if(is_null($this->date)){
+            return "";
+        }
+        $format = 'd/m/Y';
+        return $this->date->format($format);
+    }
+
+    /**
      * @return mixed
      */
     public function getIntervenant()
@@ -179,14 +218,14 @@ class Examen {
      * @param Competence $competence
      */
     public function addCompetence(Competence $competence) {
-
+        $this->competences[] = $competence;
     }
 
     /**
      * @param Competence $competence
      */
     public function removeCompetence(Competence $competence) {
-
+        $this->competences->removeElement($competence);
     }
 
 }

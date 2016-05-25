@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * EvaluationExamen
  *
  * @ORM\Entity(repositoryClass="EvaluationBundle\Repository\EvaluationExamenRepository")
+ *
+ * @ExclusionPolicy("all")
  */
 class EvaluationExamen extends EvaluationIntervenant {
 

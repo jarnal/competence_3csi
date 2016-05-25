@@ -82,4 +82,27 @@ class CompetenceRepository extends EntityRepository
         return $result;
     }
 
+    /**
+     * Returns all competences linked to the specific matiere
+     *
+     * @param $matiereID
+     */
+    public function findByExamenId($examenID) {
+        $sql =  "SELECT c.id, c.name ".
+            "FROM c3csi_examen exam ".
+            "LEFT JOIN c3csi_examen_rel_competence exam_comp ON exam_comp.examen_id = exam.id ".
+            "LEFT JOIN c3csi_competence c ON c.id = exam_comp.competence_id ".
+            "WHERE exam.id = ?";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('SkillBundle\Entity\Competence', 'c');
+        $rsm->addFieldResult('c', 'id', 'id');
+        $rsm->addFieldResult('c', 'name', 'name');
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $examenID);
+        $result = $query->getResult();
+        return $result;
+    }
+
 }
