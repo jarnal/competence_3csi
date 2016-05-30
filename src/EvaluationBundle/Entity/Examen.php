@@ -63,8 +63,6 @@ class Examen {
      * @var \DateTime
      * @ORM\Column(name="date", type="datetime")
      *
-     * @Groups({"Default"})
-     * @Expose
      */
     private $date;
 

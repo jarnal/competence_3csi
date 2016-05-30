@@ -184,8 +184,8 @@ class UserRepository extends EntityRepository
         $sql =
             "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr, " .
             "c.id AS competence_id, c.name AS competence_name, " .
-            "CONCAT( COALESCE(tn_auto.value,''), '- ', COALESCE(tn_auto.label,'') ) as type_note_label_auto, COALESCE( tn_auto.value,'-') as type_note_value_auto, " .
-            "CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
+            "CONCAT( COALESCE(tn_auto.value,''), '- ', COALESCE(tn_auto.label,'Test') ) as type_note_label_auto, COALESCE( tn_auto.value,'-') as type_note_value_auto, " .
+            "CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'Test') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
             "FROM c3csi_user u " .
             "LEFT JOIN c3csi_group_rel_user grp_rel_us ON grp_rel_us.user_id = u.id " .
             "LEFT JOIN c3csi_enseignement ens ON ens.group_id = grp_rel_us.group_id AND ens.matiere_id = ? " .
@@ -234,8 +234,8 @@ class UserRepository extends EntityRepository
     {
         $sql = "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr, " .
             "c.id AS competence_id, c.name AS competence_name, " .
-            "CONCAT( COALESCE(tn_auto.value,''), '- ', COALESCE(tn_auto.label,'') ) as type_note_label_auto, COALESCE(tn_auto.value,'-') as type_note_value_auto, " .
-            "CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
+            "CONCAT( COALESCE(tn_auto.value,'0'), '- ', COALESCE(tn_auto.label,'Non noté') ) as type_note_label_auto, COALESCE(tn_auto.value,'-') as type_note_value_auto, " .
+            "CONCAT( COALESCE(tn.value,'0'), '- ', COALESCE(tn.label,'Non noté') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
             "FROM c3csi_group grp " .
             "LEFT JOIN c3csi_group_rel_user grp_rel_us ON grp_rel_us.group_id = grp.id " .
             "LEFT JOIN c3csi_user u ON u.id = grp_rel_us.user_id " .
@@ -284,8 +284,8 @@ class UserRepository extends EntityRepository
     {
         $sql = "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr, " .
             "c.id AS competence_id, c.name AS competence_name, " .
-            "CONCAT( COALESCE(tn_auto.value,''), '- ', COALESCE(tn_auto.label,'') ) as type_note_label_auto, COALESCE(tn_auto.value,'-') as type_note_value_auto, " .
-            "CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
+            "CONCAT( COALESCE(tn_auto.value,'0'), '- ', COALESCE(tn_auto.label,'Non noté') ) as type_note_label_auto, COALESCE(tn_auto.value,'-') as type_note_value_auto, " .
+            "CONCAT( COALESCE(tn.value,'0'), '- ', COALESCE(tn.label,'Non noté') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
             "FROM c3csi_group grp " .
             "LEFT JOIN c3csi_group_rel_user grp_rel_us ON grp_rel_us.group_id = grp.id " .
             "LEFT JOIN c3csi_user u ON u.id = grp_rel_us.user_id " .
