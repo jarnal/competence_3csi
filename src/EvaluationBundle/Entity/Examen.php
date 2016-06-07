@@ -95,11 +95,20 @@ class Examen {
     private $competences;
 
     /**
+     *
+     *
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="EvaluationBundle\Entity\EvaluationExamen", mappedBy="examen", orphanRemoval=true)
+     */
+    private $evaluations;
+
+    /**
      * User constructor.
      */
     public function __construct()
     {
         $this->competences = new ArrayCollection();
+        $this->evaluations = new ArrayCollection();
     }
 
     /**
@@ -224,6 +233,28 @@ class Examen {
      */
     public function removeCompetence(Competence $competence) {
         $this->competences->removeElement($competence);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getEvaluations()
+    {
+        return $this->evaluations;
+    }
+
+    /**
+     * @param EvaluationExamen $evaluation
+     */
+    public function addEvaluations(EvaluationExamen $evaluation) {
+        $this->evaluations[] = $evaluation;
+    }
+
+    /**
+     * @param EvaluationExamen $evaluation
+     */
+    public function removeEvaluations(EvaluationExamen $evaluation) {
+        $this->evaluations->removeElement($evaluation);
     }
 
 }

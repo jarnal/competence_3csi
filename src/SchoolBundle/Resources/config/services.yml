@@ -10,6 +10,11 @@ parameters:
     school_bundle.entity.group.class: SchoolBundle\Entity\Group
     school_bundle.form.group.class: SchoolBundle\Form\GroupType
     school_bundle.form_exception.group.class: SchoolBundle\Exception\InvalidGroupFormException
+    # Diplomes Parameters
+    school_bundle.service.diplome.class: SchoolBundle\Service\DiplomeService
+    school_bundle.entity.diplome.class: SchoolBundle\Entity\Diplome
+    school_bundle.form.diplome.class: SchoolBundle\Form\DiplomeType
+    school_bundle.form_exception.diplome.class: SchoolBundle\Exception\InvalidDiplomeFormException
 
 # Services
 services:
@@ -21,3 +26,7 @@ services:
     school_bundle.service.group:
         class: %school_bundle.service.group.class%
         arguments: [@doctrine.orm.entity_manager, @form.factory, %school_bundle.entity.group.class%, %school_bundle.form.group.class%, %school_bundle.form_exception.group.class%]
+    # Group Services
+    school_bundle.service.diplome:
+        class: %school_bundle.service.diplome.class%
+        arguments: [@doctrine.orm.entity_manager, @form.factory, %school_bundle.entity.diplome.class%, %school_bundle.form.diplome.class%, %school_bundle.form_exception.diplome.class%]

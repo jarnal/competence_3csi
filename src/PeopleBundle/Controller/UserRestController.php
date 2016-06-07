@@ -5,6 +5,7 @@ namespace PeopleBundle\Controller;
 use EvaluationBundle\Entity\Examen;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Util\Codes;
+use SchoolBundle\Entity\Diplome;
 use SchoolBundle\Entity\Matiere;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -190,6 +191,48 @@ class UserRestController extends FOSRestController
     }
 
     /**
+     * Returns all diplomes for a given group.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="Group API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="User id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="SchoolBundle\Entity\Diplome",
+     *      "collection"=true,
+     *      "collectionName"="diplomes",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser",
+     *          "Nelmio\ApiDocBundle\Parser\CollectionParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when group exists",
+     *     404 = "Returned when the group is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/{id}/diplomes", name="get_diplomes", options={ "method_prefix" = false })
+     *
+     * @return Diplome
+     */
+    public function listDiplomesAction($id)
+    {
+        $this->getService()->getOr404($id);
+        return $this->container->get('school_bundle.service.diplome')->findByUserId($id);
+    }
+
+    /**
      * Returns a user by id.
      *
      * @ApiDoc(
@@ -347,8 +390,6 @@ class UserRestController extends FOSRestController
         return $result;
     }
 
-    //------------------------------------------------------------
-
     /**
      * Returns a user by id.
      *
@@ -425,7 +466,81 @@ class UserRestController extends FOSRestController
         return $result;
     }
 
-    //------------------------------------------------------------
+    /**
+     * Returns a user by id.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="User API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="User id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="\PeopleBundle\Entity\User",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/evaluation_statistics/group/{group_id}", name="get_evaluation_statistics_by_group", options={"method_prefix" = false}, requirements={"id"="\d+"})
+     *
+     * @return User
+     */
+    public function listEvaluationsStatisticsForUsersByGroupAction($group_id) {
+        $result = $this->getService()->findUsersCompetencesEvaluatedPercentageByGroupId($group_id);
+        return $result;
+    }
+
+    /**
+     * Returns a user by id.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="User API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="User id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="\PeopleBundle\Entity\User",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/evaluation_statistics/group/{group_id}/matiere/{matiere_id}", name="get_evaluation_statistics_by_group_matiere", options={"method_prefix" = false}, requirements={"id"="\d+"})
+     *
+     * @return User
+     */
+    public function listEvaluationsStatisticsForUsersByGroupAndMatiereAction($group_id, $matiere_id) {
+        $result = $this->getService()->findUsersCompetencesEvaluatedPercentageByGroupAndMatiere($group_id, $matiere_id);
+        return $result;
+    }
 
     /**
      * Adds a new user.

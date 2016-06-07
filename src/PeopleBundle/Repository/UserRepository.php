@@ -62,17 +62,17 @@ class UserRepository extends EntityRepository
         $sql = "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr,
                 c.id AS competence_id, c.name AS competence_name,
                 CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label  " .
-            "FROM c3csi_user u " .
-            "CROSS JOIN c3csi_competence c ON c.id IN (?) " .
-            "LEFT JOIN c3csi_evaluation ev ON ev.user_id = u.id AND ev.competence_id = c.id AND ev.evaluated_at = ( " .
-            "SELECT MAX(evaluated_at) " .
-            "FROM c3csi_evaluation ev2 " .
-            "WHERE ev2.user_id = u.id AND ev2.competence_id = c.id " .
-            "GROUP BY user_id, competence_id " .
-            ") " .
-            "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id " .
-            "WHERE u.id IN (?) " .
-            "ORDER BY u.id ";
+                "FROM c3csi_user u " .
+                "CROSS JOIN c3csi_competence c ON c.id IN (?) " .
+                "LEFT JOIN c3csi_evaluation ev ON ev.user_id = u.id AND ev.competence_id = c.id AND ev.evaluated_at = ( " .
+                "SELECT MAX(evaluated_at) " .
+                "   FROM c3csi_evaluation ev2 " .
+                "   WHERE ev2.user_id = u.id AND ev2.competence_id = c.id " .
+                "   GROUP BY user_id, competence_id " .
+                ") " .
+                "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id " .
+                "WHERE u.id IN (?) " .
+                "ORDER BY u.id ";
 
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult("user_id", "user_id");
@@ -184,8 +184,8 @@ class UserRepository extends EntityRepository
         $sql =
             "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr, " .
             "c.id AS competence_id, c.name AS competence_name, " .
-            "CONCAT( COALESCE(tn_auto.value,''), '- ', COALESCE(tn_auto.label,'Test') ) as type_note_label_auto, COALESCE( tn_auto.value,'-') as type_note_value_auto, " .
-            "CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'Test') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
+            "CONCAT( COALESCE(tn_auto.value,'0'), '- ', COALESCE(tn_auto.label,'Non noté') ) as type_note_label_auto, COALESCE( tn_auto.value,'-') as type_note_value_auto, " .
+            "CONCAT( COALESCE(tn.value,'0'), '- ', COALESCE(tn.label,'Non noté') ) as type_note_label, COALESCE(tn.value,'-') as type_note_value " .
             "FROM c3csi_user u " .
             "LEFT JOIN c3csi_group_rel_user grp_rel_us ON grp_rel_us.user_id = u.id " .
             "LEFT JOIN c3csi_enseignement ens ON ens.group_id = grp_rel_us.group_id AND ens.matiere_id = ? " .
@@ -335,8 +335,8 @@ class UserRepository extends EntityRepository
     {
         $sql = "SELECT u.id as user_id, CONCAT(u.firstname, ' ', u.lastname) AS user_name, u.discr, " .
             "c.id AS competence_id, c.name AS competence_name, " .
-            "CONCAT( COALESCE(tn_auto.value,''), '- ', COALESCE(tn_auto.label,'') ) as type_note_label_auto, " .
-            "CONCAT( COALESCE(tn.value,''), '- ', COALESCE(tn.label,'') ) as type_note_label " .
+            "CONCAT( COALESCE(tn_auto.value,'0'), '- ', COALESCE(tn_auto.label,'Non noté') ) as type_note_label_auto, " .
+            "CONCAT( COALESCE(tn.value,'0'), '- ', COALESCE(tn.label,'Non noté') ) as type_note_label " .
             "FROM c3csi_user u " .
             "CROSS JOIN c3csi_competence c ON c.id IN (?) " .
             "LEFT JOIN c3csi_evaluation ev_auto ON ev_auto.user_id = u.id AND ev_auto.competence_id = c.id AND ev_auto.discr = 'auto' AND ev_auto.evaluated_at = ( " .
@@ -396,6 +396,111 @@ class UserRepository extends EntityRepository
         $result = $query->getResult();
 
         return $result;
+    }
+
+    /**
+     * @param $groupID
+     */
+    public function findUsersCompetencesEvaluatedPercentageByGroupId($groupID) {
+
+        $sql = "SELECT User.id AS user_id, CONCAT(User.firstname,' ',User.lastname) AS user_name, MatieresUser.matiere_id, MatieresUser.matiere_name, COUNT(Evaluations.note_id) AS nb_evaluated, CompetencesByMatiere.nb_competence ".
+            "	FROM c3csi_group Groupe ".
+            "		INNER JOIN c3csi_group_rel_user GroupRelUser ON GroupRelUser.group_id = Groupe.id ".
+            "		INNER JOIN c3csi_user User ON User.id = GroupRelUser.user_id ".
+            "		CROSS JOIN ( ".
+            "			SELECT Groupe.id AS groupe_id, Matiere.id AS matiere_id, Matiere.name AS matiere_name, Competence.id AS competence_id, Competence.name AS competence_name ".
+            "				FROM c3csi_group Groupe ".
+            "				LEFT JOIN c3csi_enseignement Enseignement ON Enseignement.group_id = Groupe.id ".
+            "				LEFT JOIN c3csi_matiere Matiere ON Matiere.id = Enseignement.matiere_id ".
+            "				LEFT JOIN c3csi_competence_rel_matiere CompRelMatiere ON CompRelMatiere.matiere_id = Matiere.id ".
+            "				LEFT JOIN c3csi_competence Competence ON Competence.id = CompRelMatiere.competence_id ".
+            "		) MatieresUser ON MatieresUser.groupe_id = Groupe.id ".
+            "		LEFT JOIN ( ".
+            "			SELECT Matiere.id AS matiere_id, Matiere.name AS matiere_name, COUNT(*) AS nb_competence ".
+            "				FROM c3csi_group Groupe ".
+            "				LEFT JOIN c3csi_enseignement Enseignement ON Enseignement.group_id = Groupe.id ".
+            "				LEFT JOIN c3csi_matiere Matiere ON Matiere.id = Enseignement.matiere_id ".
+            "				LEFT JOIN c3csi_competence_rel_matiere CompRelMatiere ON CompRelMatiere.matiere_id = Matiere.id ".
+            "				LEFT JOIN c3csi_competence Competence ON Competence.id = CompRelMatiere.competence_id ".
+            "				GROUP BY Matiere.id ".
+            "		) CompetencesByMatiere ON CompetencesByMatiere.matiere_id = MatieresUser.matiere_id ".
+            "		LEFT JOIN c3csi_evaluation Evaluations ON Evaluations.evaluated_at = ( ".
+            "			SELECT MAX(evaluated_at) ".
+            "				FROM c3csi_evaluation ev2 ".
+            "			WHERE ev2.user_id = User.id AND ev2.competence_id = MatieresUser.competence_id AND NOT ev2.discr = 'auto' ".
+            "			GROUP BY user_id, competence_id ".
+            "		) AND Evaluations.competence_id = MatieresUser.competence_id AND Evaluations.user_id = User.id ".
+            "		WHERE Groupe.id = ? ".
+            "		GROUP BY User.id, MatieresUser.matiere_id ".
+            "		ORDER BY User.id, MatieresUser.competence_id ";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult("user_id", "user_id");
+        $rsm->addScalarResult("user_name", "user_name");
+        $rsm->addScalarResult("matiere_id", "matiere_id");
+        $rsm->addScalarResult("matiere_name", "matiere_name");
+        $rsm->addScalarResult("nb_evaluated", "nb_evaluated");
+        $rsm->addScalarResult("nb_competence", "nb_competence");
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $groupID);
+        $result = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        return $result;
+
+    }
+
+    /**
+     * @param $groupID
+     */
+    public function findUsersCompetencesEvaluatedPercentageByGroupAndMatiere($groupID, $matiereID) {
+
+        $sql = "SELECT User.id AS user_id, CONCAT(User.firstname,' ',User.lastname) AS user_name, MatieresUser.matiere_id, MatieresUser.matiere_name, COUNT(Evaluations.note_id) AS nb_evaluated, CompetencesByMatiere.nb_competence ".
+            "	FROM c3csi_group Groupe ".
+            "		INNER JOIN c3csi_group_rel_user GroupRelUser ON GroupRelUser.group_id = Groupe.id ".
+            "		INNER JOIN c3csi_user User ON User.id = GroupRelUser.user_id ".
+            "		CROSS JOIN ( ".
+            "			SELECT Groupe.id AS groupe_id, Matiere.id AS matiere_id, Matiere.name AS matiere_name, Competence.id AS competence_id, Competence.name AS competence_name ".
+            "				FROM c3csi_group Groupe ".
+            "				LEFT JOIN c3csi_enseignement Enseignement ON Enseignement.group_id = Groupe.id ".
+            "				LEFT JOIN c3csi_matiere Matiere ON Matiere.id = Enseignement.matiere_id ".
+            "				LEFT JOIN c3csi_competence_rel_matiere CompRelMatiere ON CompRelMatiere.matiere_id = Matiere.id ".
+            "				LEFT JOIN c3csi_competence Competence ON Competence.id = CompRelMatiere.competence_id ".
+            "		) MatieresUser ON MatieresUser.groupe_id = Groupe.id ".
+            "		LEFT JOIN ( ".
+            "			SELECT Matiere.id AS matiere_id, Matiere.name AS matiere_name, COUNT(*) AS nb_competence ".
+            "				FROM c3csi_group Groupe ".
+            "				LEFT JOIN c3csi_enseignement Enseignement ON Enseignement.group_id = Groupe.id ".
+            "				LEFT JOIN c3csi_matiere Matiere ON Matiere.id = Enseignement.matiere_id ".
+            "				LEFT JOIN c3csi_competence_rel_matiere CompRelMatiere ON CompRelMatiere.matiere_id = Matiere.id ".
+            "				LEFT JOIN c3csi_competence Competence ON Competence.id = CompRelMatiere.competence_id ".
+            "				GROUP BY Matiere.id ".
+            "		) CompetencesByMatiere ON CompetencesByMatiere.matiere_id = MatieresUser.matiere_id ".
+            "		LEFT JOIN c3csi_evaluation Evaluations ON Evaluations.evaluated_at = ( ".
+            "			SELECT MAX(evaluated_at) ".
+            "				FROM c3csi_evaluation ev2 ".
+            "			WHERE ev2.user_id = User.id AND ev2.competence_id = MatieresUser.competence_id AND NOT ev2.discr = 'auto' ".
+            "			GROUP BY user_id, competence_id ".
+            "		) AND Evaluations.competence_id = MatieresUser.competence_id AND Evaluations.user_id = User.id ".
+            "		WHERE Groupe.id = ? AND MatieresUser.matiere_id = ?".
+            "		GROUP BY User.id, MatieresUser.matiere_id ".
+            "		ORDER BY User.id, MatieresUser.competence_id ";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult("user_id", "user_id");
+        $rsm->addScalarResult("user_name", "user_name");
+        $rsm->addScalarResult("matiere_id", "matiere_id");
+        $rsm->addScalarResult("matiere_name", "matiere_name");
+        $rsm->addScalarResult("nb_evaluated", "nb_evaluated");
+        $rsm->addScalarResult("nb_competence", "nb_competence");
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $groupID);
+        $query->setParameter(2, $matiereID);
+        $result = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        return $result;
+
     }
 
 }

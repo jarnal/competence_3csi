@@ -239,9 +239,9 @@ class ExamenRestController extends FOSRestController
     public function deleteAction($id)
     {
         $service = $this->getService();
-        $game = $service->getOr404($id);
-        if ( isset($game) ) {
-            return $service->delete($game);
+        $examen = $service->getOr404($id);
+        if ( isset($examen) ) {
+            return $service->delete($examen);
         }
     }
 

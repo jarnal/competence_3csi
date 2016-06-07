@@ -25,7 +25,7 @@ class EvaluationExamen extends EvaluationIntervenant {
      * Intervenant who attributed the evaluation
      *
      * @var Examen
-     * @ORM\ManyToOne(targetEntity="EvaluationBundle\Entity\Examen", inversedBy="evaluations")
+     * @ORM\ManyToOne(targetEntity="EvaluationBundle\Entity\Examen", inversedBy="evaluations", cascade={"remove"})
      */
     protected $examen;
 

@@ -114,6 +114,20 @@ class UserService extends EntityRestService
     }
 
     /**
+     * @param $groupID
+     */
+    public function findUsersCompetencesEvaluatedPercentageByGroupId($groupID) {
+        return $this->repository->findUsersCompetencesEvaluatedPercentageByGroupId($groupID);
+    }
+
+    /**
+     * @param $groupID
+     */
+    public function findUsersCompetencesEvaluatedPercentageByGroupAndMatiere($groupID, $matiereID) {
+        return $this->repository->findUsersCompetencesEvaluatedPercentageByGroupAndMatiere($groupID, $matiereID);
+    }
+
+    /**
      * Returns the users related to the group passed in parameter
      *
      * @param $groupID
