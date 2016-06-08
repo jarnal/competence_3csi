@@ -45,6 +45,13 @@ class ExamenService extends EntityRestService
     }
 
     /**
+     * @param $userId
+     */
+    public function findForCalendarByUserId($userID){
+        return $this->repository->findForCalendarByUserId($userID);
+    }
+
+    /**
      * Returns the examens related to the intervenant passed in parameter
      *
      * @param $intervenantID

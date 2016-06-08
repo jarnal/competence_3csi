@@ -114,6 +114,30 @@ class ExamenRepository extends EntityRepository
     }
 
     /**
+     * @param $userID
+     * @return array
+     */
+    public function findForCalendarByUserId($userID){
+        $sql =  "SELECT exam.id as exam_id, exam.name as exam_name, exam.description, exam.date as exam_date ".
+            "FROM c3csi_user u ".
+            "LEFT JOIN c3csi_group_rel_user grus ON grus.user_id = u.id ".
+            "LEFT JOIN c3csi_examen exam ON exam.group_id = grus.group_id ".
+            "WHERE u.id = ? ".
+            "ORDER BY date DESC";
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult("exam_name", "title");
+        $rsm->addScalarResult("exam_date", "start");
+        $rsm->addScalarResult(true, "allDay");
+
+        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $userID);
+        $result = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+        return $result;
+    }
+
+    /**
      * Returns the examens related to the intervenant passed in parameter
      *
      * @param $intervenantID

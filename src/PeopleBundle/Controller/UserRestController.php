@@ -153,7 +153,7 @@ class UserRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="Group API",
+     *  section="User API",
      *  requirements={
      *      {
      *          "name"="id",
@@ -188,6 +188,48 @@ class UserRestController extends FOSRestController
     {
         $this->getService()->getOr404($id);
         return $this->container->get('evaluation_bundle.service.examen')->findByUserId($id);
+    }
+
+    /**
+     * Returns all examens for a given group.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="User API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="Group id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="EvluationBundle\Entity\Examen",
+     *      "collection"=true,
+     *      "collectionName"="examens",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser",
+     *          "Nelmio\ApiDocBundle\Parser\CollectionParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when group exists",
+     *     404 = "Returned when the group is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/{id}/examens_calendar", name="get_examens_calendar", options={ "method_prefix" = false })
+     *
+     * @return Examen
+     */
+    public function listCalendarExamensAction($id)
+    {
+        $this->getService()->getOr404($id);
+        return $this->container->get('evaluation_bundle.service.examen')->findForCalendarByUserId($id);
     }
 
     /**
