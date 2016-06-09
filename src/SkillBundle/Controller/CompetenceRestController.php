@@ -31,7 +31,7 @@ class CompetenceRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="Competences API",
+     *  section="Competence API",
      *  output={
      *      "class"="SchoolBundle\Entity\Competence",
      *      "collection"=true,
@@ -60,7 +60,6 @@ class CompetenceRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="Competence API",
      *  section="Competence API",
      *  requirements={
      *      {
@@ -95,11 +94,11 @@ class CompetenceRestController extends FOSRestController
     }
 
     /**
-     * Adds a new game.
+     * Adds a new competence.
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="Game API",
+     *  section="Competence API",
      *  input="SchoolBundle\Form\GameType",
      *  statusCodes = {
      *      200 = "Returned when the game has been created",
@@ -140,11 +139,11 @@ class CompetenceRestController extends FOSRestController
     }
 
     /**
-     * Builds the form to use to create a new game.
+     * Builds the form to use to create a new competence.
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="Game API",
+     *  section="Competence API",
      *  statusCodes = {
      *      200 = "Returned when successful",
      *      404 = "Returned when the related team doesn't exist."
@@ -186,11 +185,11 @@ class CompetenceRestController extends FOSRestController
     }
 
     /**
-     * Update existing game from the submitted data or create a new game.
+     * Update existing game from the submitted data or create a new competence.
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="Game API",
+     *  section="Competence API",
      *  input="SchoolBundle\Form\GameType",
      *  statusCodes = {
      *      201 = "Returned when a new game is created",
@@ -245,11 +244,11 @@ class CompetenceRestController extends FOSRestController
     }
 
     /**
-     * Builds the form to use to update an existing game.
+     * Builds the form to use to update an existing competence.
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="Game API",
+     *  section="Competence API",
      *  statusCodes = {
      *      200 = "Returned when successful",
      *      404 = "Returned when the game doesn't exist."
@@ -283,11 +282,11 @@ class CompetenceRestController extends FOSRestController
     }
 
     /**
-     * Deletes a game depending on the passed id.
+     * Deletes a competence depending on the passed id.
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="Game API",
+     *  section="Competence API",
      *  statusCodes = {
      *      200 = "Returned when game has been successfully deleted.",
      *      404 = "Returned when game doesn't exist."
@@ -316,11 +315,11 @@ class CompetenceRestController extends FOSRestController
     }
 
     /**
-     * Returns all cards for a given game.
+     * Returns all competence for a given intervenant.
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="Matiere API",
+     *  section="Competence API",
      *  requirements={
      *      {
      *          "name"="id",

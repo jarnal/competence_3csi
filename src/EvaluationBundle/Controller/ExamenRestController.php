@@ -47,7 +47,7 @@ class ExamenRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="Examens API",
+     *  section="Examen API",
      *  output={
      *      "class"="SchoolBundle\Entity\Examen",
      *      "collection"=true,
@@ -72,7 +72,7 @@ class ExamenRestController extends FOSRestController
     }
 
     /**
-     * Returns a examen by id.
+     * Returns an examen by id.
      *
      * @ApiDoc(
      *  resource=true,
@@ -110,7 +110,7 @@ class ExamenRestController extends FOSRestController
     }
 
     /**
-     * Adds a new user.
+     * Adds a new examen.
      *
      * @ApiDoc(
      *  resource = true,
@@ -176,7 +176,7 @@ class ExamenRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="Group API",
+     *  section="Examen API",
      *  requirements={
      *      {
      *          "name"="id",

@@ -33,7 +33,7 @@ class GroupRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="Groups API",
+     *  section="Group API",
      *  output={
      *      "class"="SchoolBundle\Entity\Group",
      *      "collection"=true,
@@ -96,7 +96,7 @@ class GroupRestController extends FOSRestController
     }
 
     /**
-     * Deletes a game depending on the passed id.
+     * Deletes a group depending on the passed id.
      *
      * @ApiDoc(
      *  resource = true,

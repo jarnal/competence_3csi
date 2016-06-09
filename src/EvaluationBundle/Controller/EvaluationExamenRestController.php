@@ -46,7 +46,7 @@ class EvaluationExamenRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="EvaluationExamen API",
+     *  section="Evaluation Examen API",
      *  output={
      *      "class"="SchoolBundle\Entity\EvaluationExamen",
      *      "collection"=true,
@@ -75,7 +75,7 @@ class EvaluationExamenRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="EvaluationExamen API",
+     *  section="Evaluation Examen API",
      *  requirements={
      *      {
      *          "name"="id",
@@ -113,7 +113,7 @@ class EvaluationExamenRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="User API",
+     *  section="Evaluation Examen API",
      *  input="EvaluationBundle\Form\EvaluationIntervenantType",
      *  statusCodes = {
      *      200 = "Returned when the user has been created",
@@ -161,7 +161,7 @@ class EvaluationExamenRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="EvaluationExamen API",
+     *  section="Evaluation Examen API",
      *  statusCodes = {
      *      200 = "Returned when evaluation examen has been successfully deleted.",
      *      404 = "Returned when evaluation examen doesn't exist."

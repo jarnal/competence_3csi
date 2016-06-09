@@ -67,7 +67,7 @@ class UserRepository extends EntityRepository
                 "LEFT JOIN c3csi_evaluation ev ON ev.user_id = u.id AND ev.competence_id = c.id AND ev.evaluated_at = ( " .
                 "SELECT MAX(evaluated_at) " .
                 "   FROM c3csi_evaluation ev2 " .
-                "   WHERE ev2.user_id = u.id AND ev2.competence_id = c.id " .
+                "   WHERE ev2.user_id = u.id AND ev2.competence_id = c.id AND ev2.discr = 'auto' " .
                 "   GROUP BY user_id, competence_id " .
                 ") " .
                 "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id " .
@@ -299,10 +299,10 @@ class UserRepository extends EntityRepository
             "	GROUP BY user_id, competence_id " .
             ") " .
             "LEFT JOIN c3csi_type_note tn_auto ON tn_auto.id = ev_auto.note_id " .
-            "LEFT JOIN c3csi_evaluation ev ON ev.user_id = u.id AND ev.competence_id = c.id AND (ev.discr = 'examen' OR ev.discr = 'intervenant') AND ev.evaluated_at = ( " .
+            "LEFT JOIN c3csi_evaluation ev ON ev.user_id = u.id AND ev.competence_id = c.id AND NOT ev.discr = 'auto' AND ev.evaluated_at = ( " .
             "	SELECT MAX(evaluated_at) " .
             "	FROM c3csi_evaluation ev2 " .
-            "	WHERE ev2.user_id = u.id AND ev2.competence_id = c.id AND (ev.discr = 'examen' OR ev.discr = 'intervenant') " .
+            "	WHERE ev2.user_id = u.id AND ev2.competence_id = c.id AND NOT ev2.discr = 'auto' " .
             "	GROUP BY user_id, competence_id " .
             ") " .
             "LEFT JOIN c3csi_type_note tn ON tn.id = ev.note_id " .

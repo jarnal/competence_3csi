@@ -31,7 +31,7 @@ class TypeNoteRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="TypeNotes API",
+     *  section="Type Note API",
      *  output={
      *      "class"="SchoolBundle\Entity\TypeNote",
      *      "collection"=true,
@@ -60,7 +60,7 @@ class TypeNoteRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="TypeNote API",
+     *  section="Type Note API",
      *  requirements={
      *      {
      *          "name"="id",

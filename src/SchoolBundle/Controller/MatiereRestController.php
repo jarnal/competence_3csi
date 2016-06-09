@@ -31,7 +31,7 @@ class MatiereRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="Matieres API",
+     *  section="Matiere API",
      *  output={
      *      "class"="SchoolBundle\Entity\Matiere",
      *      "collection"=true,
@@ -94,11 +94,11 @@ class MatiereRestController extends FOSRestController
     }
 
     /**
-     * Deletes a game depending on the passed id.
+     * Deletes a matiere depending on the passed id.
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="Game API",
+     *  section="Matiere API",
      *  statusCodes = {
      *      200 = "Returned when game has been successfully deleted.",
      *      404 = "Returned when game doesn't exist."

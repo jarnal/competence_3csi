@@ -44,7 +44,7 @@ class EvaluationIntervenantRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="EvaluationIntervenant API",
+     *  section="Evaluation Intervenant API",
      *  output={
      *      "class"="SchoolBundle\Entity\EvaluationIntervenant",
      *      "collection"=true,
@@ -73,7 +73,7 @@ class EvaluationIntervenantRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="EvaluationIntervenant API",
+     *  section="Evaluation Intervenant API",
      *  requirements={
      *      {
      *          "name"="id",
@@ -111,7 +111,7 @@ class EvaluationIntervenantRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="User API",
+     *  section="Evaluation Intervenant API",
      *  statusCodes = {
      *    200 = "Returned when successful"
      *  }
@@ -140,7 +140,7 @@ class EvaluationIntervenantRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="User API",
+     *  section="Evaluation Intervenant API",
      *  input="EvaluationBundle\Form\EvaluationIntervenantType",
      *  statusCodes = {
      *      200 = "Returned when the user has been created",
@@ -186,7 +186,7 @@ class EvaluationIntervenantRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="EvaluationIntervenant API",
+     *  section="Evaluation Intervenant API",
      *  statusCodes = {
      *      200 = "Returned when evaluation intervenant has been successfully deleted.",
      *      404 = "Returned when evaluation intervenant doesn't exist."

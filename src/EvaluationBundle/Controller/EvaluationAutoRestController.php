@@ -45,7 +45,7 @@ class EvaluationAutoRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="EvaluationAutos API",
+     *  section="Evaluation Auto API",
      *  output={
      *      "class"="SchoolBundle\Entity\EvaluationAuto",
      *      "collection"=true,
@@ -74,7 +74,7 @@ class EvaluationAutoRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="EvaluationAuto API",
+     *  section="Evaluation Auto API",
      *  requirements={
      *      {
      *          "name"="id",
@@ -112,7 +112,7 @@ class EvaluationAutoRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="User API",
+     *  section="Evaluation Auto API",
      *  input="EvaluationBundle\Form\EvaluationIntervenantType",
      *  statusCodes = {
      *      200 = "Returned when the user has been created",
@@ -157,7 +157,7 @@ class EvaluationAutoRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource = true,
-     *  section="EvaluationAuto API",
+     *  section="Evaluation Auto API",
      *  statusCodes = {
      *      200 = "Returned when evaluation auto has been successfully deleted.",
      *      404 = "Returned when evaluation auto doesn't exist."

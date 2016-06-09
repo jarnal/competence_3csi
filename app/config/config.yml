@@ -143,6 +143,7 @@ fos_oauth_server:
         user_provider: platform.user.provider
         options:
             supported_scopes: user
+            access_token_lifetime: 3600
 
 jms_serializer:
     metadata:

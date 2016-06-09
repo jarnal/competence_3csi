@@ -131,8 +131,8 @@ class UserRestController extends FOSRestController
      *      "groups"={"Default"}
      *  },
      *  statusCodes = {
-     *     200 = "Returned when group exists",
-     *     404 = "Returned when the group is not found"
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
      *   }
      * )
      *
@@ -149,7 +149,7 @@ class UserRestController extends FOSRestController
     }
 
     /**
-     * Returns all examens for a given group.
+     * Returns all examens for a given user.
      *
      * @ApiDoc(
      *  resource=true,
@@ -159,11 +159,11 @@ class UserRestController extends FOSRestController
      *          "name"="id",
      *          "dataType"="integer",
      *          "requirement"="\d+",
-     *          "description"="Group id"
+     *          "description"="User id"
      *      }
      *  },
      *  output={
-     *      "class"="SkillBundle\Entity\Competence",
+     *      "class"="EvaluationBundle\Entity\Examen",
      *      "collection"=true,
      *      "collectionName"="examens",
      *      "parsers" = {
@@ -173,8 +173,8 @@ class UserRestController extends FOSRestController
      *      "groups"={"Default"}
      *  },
      *  statusCodes = {
-     *     200 = "Returned when group exists",
-     *     404 = "Returned when the group is not found"
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
      *   }
      * )
      *
@@ -191,7 +191,7 @@ class UserRestController extends FOSRestController
     }
 
     /**
-     * Returns all examens for a given group.
+     * Returns all examens for in fullcalendar data for a given user.
      *
      * @ApiDoc(
      *  resource=true,
@@ -201,7 +201,7 @@ class UserRestController extends FOSRestController
      *          "name"="id",
      *          "dataType"="integer",
      *          "requirement"="\d+",
-     *          "description"="Group id"
+     *          "description"="User id"
      *      }
      *  },
      *  output={
@@ -237,7 +237,7 @@ class UserRestController extends FOSRestController
      *
      * @ApiDoc(
      *  resource=true,
-     *  section="Group API",
+     *  section="User API",
      *  requirements={
      *      {
      *          "name"="id",
@@ -257,8 +257,8 @@ class UserRestController extends FOSRestController
      *      "groups"={"Default"}
      *  },
      *  statusCodes = {
-     *     200 = "Returned when group exists",
-     *     404 = "Returned when the group is not found"
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
      *   }
      * )
      *
@@ -275,7 +275,7 @@ class UserRestController extends FOSRestController
     }
 
     /**
-     * Returns a user by id.
+     * Returns evaluations for a list of user for a list of competences.
      *
      * @ApiDoc(
      *  resource=true,
@@ -289,7 +289,7 @@ class UserRestController extends FOSRestController
      *      }
      *  },
      *  output={
-     *      "class"="\PeopleBundle\Entity\User",
+     *      "class"="\SkillBundle\Entity\Competence",
      *      "parsers" = {
      *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser"
      *      },
@@ -316,7 +316,7 @@ class UserRestController extends FOSRestController
     }
 
     /**
-     * Returns a user by id.
+     * Returns evaluations for a list of user for a list of competences of a specific examen.
      *
      * @ApiDoc(
      *  resource=true,
@@ -357,7 +357,7 @@ class UserRestController extends FOSRestController
     }
 
     /**
-     * Returns a user by id.
+     * Returns all evaluations for all users of a group for a specific examen.
      *
      * @ApiDoc(
      *  resource=true,
@@ -395,7 +395,7 @@ class UserRestController extends FOSRestController
     }
 
     /**
-     * Returns a user by id.
+     * Returns all evaluations for all users of a group for a specific matiere..
      *
      * @ApiDoc(
      *  resource=true,
@@ -433,7 +433,7 @@ class UserRestController extends FOSRestController
     }
 
     /**
-     * Returns a user by id.
+     * Returns all evaluations for a specific user and a specific examen.
      *
      * @ApiDoc(
      *  resource=true,
@@ -471,7 +471,7 @@ class UserRestController extends FOSRestController
     }
 
     /**
-     * Returns a user by id.
+     * Returns all evaluations for a specific user and a specific matiere.
      *
      * @ApiDoc(
      *  resource=true,
@@ -509,7 +509,7 @@ class UserRestController extends FOSRestController
     }
 
     /**
-     * Returns a user by id.
+     * Returns percentage of competence evaluated for all group users in all matieres.
      *
      * @ApiDoc(
      *  resource=true,
@@ -547,7 +547,7 @@ class UserRestController extends FOSRestController
     }
 
     /**
-     * Returns a user by id.
+     * Returns percentage of competence evaluated for all group users in a specific matiere.
      *
      * @ApiDoc(
      *  resource=true,
