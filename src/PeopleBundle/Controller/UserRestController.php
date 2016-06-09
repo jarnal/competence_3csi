@@ -316,6 +316,47 @@ class UserRestController extends FOSRestController
     }
 
     /**
+     * Returns evaluations for a list of user for a list of competences.
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  section="User API",
+     *  requirements={
+     *      {
+     *          "name"="id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="User id"
+     *      }
+     *  },
+     *  output={
+     *      "class"="\SkillBundle\Entity\Competence",
+     *      "parsers" = {
+     *          "Nelmio\ApiDocBundle\Parser\JmsMetadataParser"
+     *      },
+     *      "groups"={"Default"}
+     *  },
+     *  statusCodes = {
+     *     200 = "Returned when user exists",
+     *     404 = "Returned when the user is not found"
+     *   }
+     * )
+     *
+     * @View( serializerGroups={"Default"} )
+     *
+     * @Get("/evaluations_auto/ulist/{users_id}/clist/{competences_id}", name="get_note_auto_by_competence_partial", options={"method_prefix" = false}, requirements={"id"="\d+"})
+     *
+     * @return User
+     */
+    public function listCompetencesByUsersListEvaluationAutoAction($users_id, $competences_id){
+        $usersList = json_decode($users_id);
+        $competencesList = json_decode($competences_id);
+
+        $result = $this->getService()->findByListWithEvaluationsAuto($usersList, $competencesList);
+        return $result;
+    }
+
+    /**
      * Returns evaluations for a list of user for a list of competences of a specific examen.
      *
      * @ApiDoc(
